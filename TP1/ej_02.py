@@ -4,7 +4,7 @@ from Astar import *
 
 if __name__ == "__main__":
     cols = 13
-    rows = 16
+    rows = 15
     layout = Layout(rows,cols)
     mapxy = layout.create_map()
     halls = layout.create_halls()
