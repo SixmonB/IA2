@@ -16,7 +16,7 @@ class Layout:
         for i in range(self.cols):
             for j in range(self.rows):
                 self.layout[j,i]=count
-               count = count + 1
+                count = count + 1
         return self.layout
     
     def create_halls(self):

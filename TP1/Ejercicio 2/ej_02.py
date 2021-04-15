@@ -10,8 +10,8 @@ if __name__ == "__main__":
     print(mapxy)
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = [1,1]
-    goal = [5,6]
+    init = 1
+    goal = 27
     astar = Astar(init,goal,mapxy,shelves,halls)
     while astar.check():
         astar.find_neighboors()
