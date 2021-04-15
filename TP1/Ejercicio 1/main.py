@@ -1,11 +1,10 @@
 import random
 import numpy as np
 
-def generate(array, d, o):
+def generate(array, d):
 # Generacion de valores articulares al azar. Discretizacion cada 2°. 0<Rango articular<180 
     for x in range(d):
-        for y in range(o):
-            array[x][y] = random.randrange(0, 180, 2)
+        array[x] = random.randrange(0, 180, 2)
     return array
 #def nodes(position, v):
 #    node = [[[[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]]]
@@ -23,26 +22,25 @@ def generate(array, d, o):
 d = 6 # dimensiones
 o = 20 # posiciones obstaculo
 v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
-origin = np.zeros((d,1))
-origin = generate(origin, d, 1)
-end = np.zeros((d,1))
-end = generate(end, d, 1)
-obstacles = np.zeros((d,o))
-obstacles = generate(obstacles, d, o)
+origin = np.ones((1,1,1,1,1,1)) # lo llenamos con un 1 para indicar que ya visitamos esa posicion
+origin = generate(origin, len(origin.shape))
+end = np.zeros((1,1,1,1,1,1))   #lo llenamos con 0 para indicar que todavia no visitamos esa posicion
+end = generate(end, len(end.shape))
+obstacles = np.zeros((1,1,1,1,1,1))
+obstacles = generate(obstacles, len(obstacles.shape))
 position = origin
 # Generacion de nodos
 #while True:
 #    nodes = nodes(position, v)
 
+
+
+#node = np.array([[[[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]]])
+#print(node)
+# print(node.shape)
+
 print("Origen en:\n", origin)
 print("Meta en:\n", end)
-node = np.array([[[[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]]])
-print(node)
-print(node.shape)
-
-
-
-
 # discretizacion cada 2°
 
 
