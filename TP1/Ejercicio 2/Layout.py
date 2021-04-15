@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Layout:
     def __init__(self,rows,cols):
         self.layout = np.zeros((rows,cols))
@@ -16,8 +15,8 @@ class Layout:
         count = 0
         for i in range(self.cols):
             for j in range(self.rows):
-                count+=1
                 self.layout[j,i]=count
+               count = count + 1
         return self.layout
     
     def create_halls(self):

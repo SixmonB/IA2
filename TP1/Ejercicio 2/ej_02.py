@@ -4,16 +4,22 @@ from Astar import *
 
 if __name__ == "__main__":
     cols = 13
-    rows = 15
+    rows = 16
     layout = Layout(rows,cols)
     mapxy = layout.create_map()
+    print(mapxy)
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = 7
-    goal = 26
+    init = [1,1]
+    goal = [5,6]
     astar = Astar(init,goal,mapxy,shelves,halls)
-    astar.find_neighboors()
-    astar.gn()
+    while astar.check():
+        astar.find_neighboors()
+        astar.gn()
+        astar.hn()
+        astar.fn()
+        astar.select_minimum()
+    
 
 
 
