@@ -7,11 +7,10 @@ if __name__ == "__main__":
     rows = 16
     layout = Layout(rows,cols)
     mapxy = layout.create_map()
-    print(mapxy)
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = 1
-    goal = 26
+    init = [0,0]
+    goal = [6,2]
     astar = Astar(init,goal,mapxy,shelves,halls)
     while astar.check():
         astar.find_neighboors()
@@ -19,6 +18,7 @@ if __name__ == "__main__":
         astar.hn()
         astar.fn()
         astar.select_minimum()
+    print(astar.mapm)
     
 
 
