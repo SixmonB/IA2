@@ -77,8 +77,6 @@ class Astar:
             if(new_current_index == self.goal):
                 self.ch = False
                 self.check
-            print(new_current_index)
-            print(len(self.nodes))
         self.distance_gn = []
         self.distance_hn = []
     
