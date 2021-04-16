@@ -7,8 +7,18 @@ class Layout:
         self.shelves = []
         self.cols = cols
         self.rows = rows
-        self.x = [0,5,10,15]
-        self.y = [0,3,6,9,12]
+        self.x = []
+        self.y = []
+        countx = 0
+        county = 0
+        for i in range(int(rows/4)):
+            self.x.append(countx)
+            countx+=5
+
+        for i in range(int((cols-1)/3 + 1)):
+            self.y.append(county)
+            county+=3
+        print(self.x,self.y)
 
     def create_map(self):
         return self.layout
