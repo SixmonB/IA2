@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Layout:
     def __init__(self,rows,cols):
         self.layout = np.zeros((rows,cols))
@@ -8,16 +7,20 @@ class Layout:
         self.shelves = []
         self.cols = cols
         self.rows = rows
-        self.x = [0,5,10,15]
-        self.y = [0,3,6,9,12]
+        self.x = []
+        self.y = []
+        countx = 0
+        county = 0
+        for i in range(int(rows/4)):
+            self.x.append(countx)
+            countx+=5
+
+        for i in range(int((cols-1)/3 + 1)):
+            self.y.append(county)
+            county+=3
+        print(self.x,self.y)
 
     def create_map(self):
-        self.layout = np.zeros((self.rows,self.cols))
-        count = 0
-        for i in range(self.cols):
-            for j in range(self.rows):
-                count+=1
-                self.layout[j,i]=count
         return self.layout
     
     def create_halls(self):
@@ -25,17 +28,17 @@ class Layout:
         halls_y = []
         for i in self.x:
             for j in range(self.cols):
-                halls_x.append(self.layout[i,j])
+                halls_x.append([i,j])
         for j in self.y:
             for i in range(self.rows):
-                halls_y.append(self.layout[i,j])
+                halls_y.append([i,j])
         self.halls = halls_x + halls_y
         return self.halls
     
     def create_shelves(self):
         for i in range(self.cols):
             for j in range(self.rows):
-                if((self.layout[j,i] in self.halls)==False):
-                    self.shelves.append(self.layout[j,i])
+                if(([j,i] in self.halls)==False):
+                    self.shelves.append([j,i])
         return self.shelves
 
