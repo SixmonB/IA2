@@ -19,8 +19,9 @@ def open_node(father, nodes, cnt):
                 for d in range(father[3] -2, father[3] +4, 2):
                     for e in range(father[4] -2, father[4] +4, 2):
                         for f in range(father[5] -2, father[5] +4, 2):
-                            nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
-                            cnt+=1
+                            if not Check_Genarado([a,b,c,d,e,f]):
+                                nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
+                                cnt+=1
     return nodes, cnt 
 
 NODOS_GENERADOS = list()
