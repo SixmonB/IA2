@@ -51,11 +51,12 @@ def Check_Genarado(position):
 d = 6 # dimensiones
 o = 20 # posiciones obstaculo
 v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
-origin =generate(d)  #  [100, 100, 100, 100, 100, 100]#  generate(d)
-end = generate(d) #     [100, 100, 100, 100, 100, 102] # generate(d)
+origin = generate(d) #[100, 100, 100, 100, 100, 100]#  generate(d)
+end =generate(d)# [50, 128, 70, 116, 160, 104] # generate(d)
 
 print("Origen en:\n", origin)
 print("Final en:\n", end)
+
 nodes = []
 cnt = 0
 # generacion de los primeros 729 nodos a partir del origen. 3^6 = 729. 3 posiciones en 6 dimensiones
@@ -71,10 +72,14 @@ while True:
             # si el nodo no ha sido abierto, generamos sus hijos y 
             # ponemos value = 1 para indicar q ya fue abierto #
             nodes, cnt = open_node(nodes[aux].position, nodes, cnt)
+            
+            
             nodes[aux].value = 1
             # los prints son para visualizar resultados
             print(nodes[aux].name)
             print(nodes[aux].position)
+            print(nodes[aux].distance)
+
             break
         
         else:
@@ -84,6 +89,7 @@ while True:
     # verificamos la satisfaccion de la condicion
     if nodes[aux].position == end:
         print("Final encontrado\n")
+        print(nodes[aux].position)
         break
     #print(cnt)
 

@@ -7,8 +7,14 @@ class New_node(object):
         self.finish = finish
         distance_origin = 0
         distance_end = 0
+        max_dist = 0
+        g_n = 0
         for i in range(6):
-            distance_origin += pow(self.position[i] - self.begining[i], 2)
-            distance_end += pow(self.position[i] - self.finish[i], 2)
+            distance_origin = pow(pow(self.position[i] - self.begining[i], 2),0.5)            
+            if distance_origin>max_dist : max_dist= distance_origin 
+            distance_end += pow(pow(self.position[i] - self.finish[i], 2),0.5)
+
+        g_n = max_dist/2
             
-        self.distance = pow(distance_origin, 0.5) + pow(distance_end, 0.5) 
+        self.distance = g_n + distance_end 
+        # print(self.distance)
