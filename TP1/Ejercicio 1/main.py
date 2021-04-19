@@ -23,6 +23,27 @@ def open_node(father, nodes, cnt):
                             cnt+=1
     return nodes, cnt 
 
+NODOS_GENERADOS = list()
+def Agregar_Espacio_Nodos(position):
+    'agrega un nodo al espacio de nodos'
+    position_str = list(map(str,position))
+    nodo_str = ','.join(position_str)
+    if nodo_str not in NODOS_GENERADOS:
+        NODOS_GENERADOS.append(nodo_str)
+        
+def Check_Genarado(position):
+    'Checkea si un nodo ya ha sido generado'
+    position_str = list(map(str,position))
+    nodo_str = ','.join(position_str)
+    if nodo_str in NODOS_GENERADOS: return True
+    else: return False
+        
+
+
+
+
+
+
 # Robot de 6 gdl -> 6 dimensiones en el espacio articular
 # Generacion de las posiciones articulares inicial y final en grados
 d = 6 # dimensiones
