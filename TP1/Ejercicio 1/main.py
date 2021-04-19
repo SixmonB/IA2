@@ -20,6 +20,7 @@ def open_node(father, nodes, cnt):
                     for e in range(father[4] -2, father[4] +4, 2):
                         for f in range(father[5] -2, father[5] +4, 2):
                             if not Check_Genarado([a,b,c,d,e,f]):
+                                Agregar_Espacio_Nodos([a,b,c,d,e,f])
                                 nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
                                 cnt+=1
     return nodes, cnt 
@@ -50,8 +51,8 @@ def Check_Genarado(position):
 d = 6 # dimensiones
 o = 20 # posiciones obstaculo
 v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
-origin = generate(d)    # [100, 100, 100, 100, 100, 100]
-end = generate(d)       # [100, 100, 100, 100, 100, 102] 
+origin =generate(d)  #  [100, 100, 100, 100, 100, 100]#  generate(d)
+end = generate(d) #     [100, 100, 100, 100, 100, 102] # generate(d)
 
 print("Origen en:\n", origin)
 print("Final en:\n", end)
@@ -75,9 +76,11 @@ while True:
             print(nodes[aux].name)
             print(nodes[aux].position)
             break
+        
         else:
             # si el nodo ya fue abierto, analizamos el nodo siguiente en la lista
             aux += 1  
+   
     # verificamos la satisfaccion de la condicion
     if nodes[aux].position == end:
         print("Final encontrado\n")
