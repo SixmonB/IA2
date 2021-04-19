@@ -28,8 +28,8 @@ def open_node(father, nodes, cnt):
 d = 6 # dimensiones
 o = 20 # posiciones obstaculo
 v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
-origin = generate(d)
-end = generate(d)
+origin = generate(d)    # [100, 100, 100, 100, 100, 100]
+end = generate(d)       # [100, 100, 100, 100, 100, 102] 
 
 print("Origen en:\n", origin)
 print("Final en:\n", end)
@@ -58,6 +58,7 @@ while True:
             aux += 1  
     # verificamos la satisfaccion de la condicion
     if nodes[aux].position == end:
+        print("Final encontrado\n")
         break
     #print(cnt)
 

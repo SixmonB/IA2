@@ -5,7 +5,10 @@ class New_node(object):
         self.value = 0
         self.begining = begining
         self.finish = finish
-        distance = 0
+        distance_origin = 0
+        distance_end = 0
         for i in range(6):
-            distance += pow(pow(self.position[i] - self.begining[i], 2),0.5) + pow(pow(self.position[i] - self.finish[i], 2),0.5)
-        self.distance = distance 
+            distance_origin += pow(self.position[i] - self.begining[i], 2)
+            distance_end += pow(self.position[i] - self.finish[i], 2)
+            
+        self.distance = pow(distance_origin, 0.5) + pow(distance_end, 0.5) 
