@@ -62,7 +62,7 @@ class Astar:
                 self.mapm[new_current_index[0],new_current_index[1]]=1 #Le asigna el valor 1 al punto, para que ya no lo visite.
                 self.way.append(self.current) #Agrega el punto al camino
                 cond = False
-            elif(self.mapm[new_current_index[0],new_current_index[1]] == 1): #Si ingresa, es un pto ya visitado.
+            elif(self.mapm[new_current_index[0],new_current_index[1]] == 1 ): #Si ingresa, es un pto ya visitado.
                 self.nodes.remove(new_current_index) #Si el pto ya fue visitado, entonces debemos removerlo de nodes, para que ya no busque en el y no ramifique sus vecinos nuevamente.
                 self.distance_fn.remove(min_point)
             if(new_current_index == self.goal): #Condición para cuando se llegue a la meta.
@@ -70,7 +70,7 @@ class Astar:
                 self.check
         self.distance_gn = [] #Se declaran 0 al final de cada iteración, ya que contendrán solo valores parciales, no de todo el recorrido como fn.
         self.distance_hn = []
-    
+
     def check(self):
         return self.ch
 
