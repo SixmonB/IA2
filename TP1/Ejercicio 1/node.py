@@ -14,7 +14,7 @@ class New_node(object):
             if distance_origin>max_dist : max_dist= distance_origin 
             distance_end += pow(pow(self.position[i] - self.finish[i], 2),0.5)
 
-        g_n = max_dist/2
+        
             
-        self.distance = g_n + distance_end 
+        self.distance = max_dist + distance_end 
         # print(self.distance)
