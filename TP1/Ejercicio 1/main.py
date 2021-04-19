@@ -1,7 +1,8 @@
 import random
 import numpy as np
 import node
-#import obstacles
+import obstacles
+
 
 def generate(d):
 # Generacion de valores articulares al azar. Discretizacion cada 2°. 0<Rango articular<180 
@@ -19,10 +20,11 @@ def open_node(father, nodes, cnt):
                 for d in range(father[3] -2, father[3] +4, 2):
                     for e in range(father[4] -2, father[4] +4, 2):
                         for f in range(father[5] -2, father[5] +4, 2):
-                            if not Check_Genarado([a,b,c,d,e,f]):
-                                Agregar_Espacio_Nodos([a,b,c,d,e,f])
-                                nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
-                                cnt+=1
+                            if not Check_Obstacles([a,b,c,d,e,f]):
+                                if not Check_Generado([a,b,c,d,e,f]):
+                                    Agregar_Espacio_Nodos([a,b,c,d,e,f])
+                                    nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
+                                    cnt+=1
     return nodes, cnt 
 
 NODOS_GENERADOS = list()
@@ -33,16 +35,18 @@ def Agregar_Espacio_Nodos(position):
     if nodo_str not in NODOS_GENERADOS:
         NODOS_GENERADOS.append(nodo_str)
         
-def Check_Genarado(position):
+def Check_Generado(position):
     'Checkea si un nodo ya ha sido generado'
     position_str = list(map(str,position))
     nodo_str = ','.join(position_str)
     if nodo_str in NODOS_GENERADOS: return True
     else: return False
-        
-
-
-
+    
+def Check_Obstacles(position):
+    for i in range(len(obstacle1.obstacle)):
+        if position == obstacle1.obstacle[i] or position == obstacle2.obstacle[i] or position == obstacle3.obstacle[i]:
+            return True
+    return False
 
 
 
@@ -54,8 +58,17 @@ v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
 origin = generate(d) #[100, 100, 100, 100, 100, 100]#  generate(d)
 end =generate(d)# [50, 128, 70, 116, 160, 104] # generate(d)
 
+# generamos 3 obstaculos de 20 elementos en cada dimension
+center1 = generate(d)
+center2 = generate(d)
+center3 = generate(d)
+
+obstacle1 = obstacles.Obstacles(center1)
+obstacle2 = obstacles.Obstacles(center2)
+obstacle3 = obstacles.Obstacles(center3)
 print("Origen en:\n", origin)
 print("Final en:\n", end)
+
 
 nodes = []
 cnt = 0
@@ -76,9 +89,9 @@ while True:
             
             nodes[aux].value = 1
             # los prints son para visualizar resultados
-            print(nodes[aux].name)
-            print(nodes[aux].position)
-            print(nodes[aux].distance)
+            print("Abriendo nodo numero: \n", nodes[aux].name)
+            print("Nodo abierto en posicion: \n", nodes[aux].position)
+            print("Funcion euristica del nodo abierto: \n", nodes[aux].distance)
 
             break
         
@@ -93,8 +106,6 @@ while True:
         break
     #print(cnt)
 
-print(nodes[0].position)
-print(cnt)
 
 
 
