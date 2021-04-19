@@ -1,46 +1,68 @@
 import random
 import numpy as np
+import node
+#import obstacles
 
-def generate(array, d):
+def generate(d):
 # Generacion de valores articulares al azar. Discretizacion cada 2°. 0<Rango articular<180 
+    array = []
     for x in range(d):
-        array[x] = random.randrange(0, 180, 2)
+        array.append(random.randrange(0, 180, 2))
     return array
-#def nodes(position, v):
-#    node = [[[[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]]]
-#   for a in range(v):
-#      for b in range(v):
-#         for c in range(v):
-#            for d in range(v):
-#  
-#                for e in range(v):
-#                  for f in range(v):
-#                     node.append(position+2) 
+
+# generacion de nodos hijo 
+# open_node(lista de posiciones articulares del nodo padre, lista donde agregar los nodos, contador)
+def open_node(father, nodes, cnt):
+    for a in range(father[0] -2, father[0] +4, 2):
+        for b in range(father[1] -2, father[1] +4, 2):
+            for c in range(father[2] -2, father[2] +4, 2):
+                for d in range(father[3] -2, father[3] +4, 2):
+                    for e in range(father[4] -2, father[4] +4, 2):
+                        for f in range(father[5] -2, father[5] +4, 2):
+                            nodes.append(node.New_node(cnt, [a,b,c,d,e,f], origin, end))
+                            cnt+=1
+    return nodes, cnt 
 
 # Robot de 6 gdl -> 6 dimensiones en el espacio articular
 # Generacion de las posiciones articulares inicial y final en grados
 d = 6 # dimensiones
 o = 20 # posiciones obstaculo
 v = 3 # cantidad de variaciones posibles (posicion +- 1 y la posicion actual)
-origin = np.ones((1,1,1,1,1,1)) # lo llenamos con un 1 para indicar que ya visitamos esa posicion
-origin = generate(origin, len(origin.shape))
-end = np.zeros((1,1,1,1,1,1))   #lo llenamos con 0 para indicar que todavia no visitamos esa posicion
-end = generate(end, len(end.shape))
-obstacles = np.zeros((1,1,1,1,1,1))
-obstacles = generate(obstacles, len(obstacles.shape))
-position = origin
-# Generacion de nodos
-#while True:
-#    nodes = nodes(position, v)
-
-
-
-#node = np.array([[[[[[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]]]]])
-#print(node)
-# print(node.shape)
+origin = generate(d)
+end = generate(d)
 
 print("Origen en:\n", origin)
-print("Meta en:\n", end)
-# discretizacion cada 2°
+print("Final en:\n", end)
+nodes = []
+cnt = 0
+# generacion de los primeros 729 nodos a partir del origen. 3^6 = 729. 3 posiciones en 6 dimensiones
+nodes, cnt = open_node(origin, nodes, cnt)
+
+while True:
+    # ordenamos la lista de nodos segun la distancia heuristica  
+    nodes.sort(key=lambda x:x.distance)
+    aux = 0
+    while True:
+        # verificamos que el nodo no haya sido abierto
+        if nodes[aux].value == 0:
+            # si el nodo no ha sido abierto, generamos sus hijos y 
+            # ponemos value = 1 para indicar q ya fue abierto #
+            nodes, cnt = open_node(nodes[aux].position, nodes, cnt)
+            nodes[aux].value = 1
+            # los prints son para visualizar resultados
+            print(nodes[aux].name)
+            print(nodes[aux].position)
+            break
+        else:
+            # si el nodo ya fue abierto, analizamos el nodo siguiente en la lista
+            aux += 1  
+    # verificamos la satisfaccion de la condicion
+    if nodes[aux].position == end:
+        break
+    #print(cnt)
+
+print(nodes[0].position)
+print(cnt)
+
 
 

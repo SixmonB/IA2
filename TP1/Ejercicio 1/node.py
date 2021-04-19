@@ -1,8 +1,11 @@
-def new_node(name):
-    self.name = name
-    self.position = position
-
-def origin(start, value):
-    self.start = start  # vector de posiciones de comienzo
-    self.value = 1      # 1 -> nodo visitado
-                        # 0 -> nodo sin visitar
+class New_node(object):
+    def __init__(self, name, position, begining, finish):
+        self.name = name
+        self.position = position
+        self.value = 0
+        self.begining = begining
+        self.finish = finish
+        distance = 0
+        for i in range(6):
+            distance += pow(pow(self.position[i] - self.begining[i], 2),0.5) + pow(pow(self.position[i] - self.finish[i], 2),0.5)
+        self.distance = distance 
