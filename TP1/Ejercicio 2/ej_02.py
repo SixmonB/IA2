@@ -10,7 +10,7 @@ if __name__ == "__main__":
     halls = layout.create_halls()
     shelves = layout.create_shelves()
     init = [0,0]
-    goal = [2,11]
+    goal = [14,11]
     astar = Astar(init,goal,mapxy,shelves,halls)
     while astar.check():
         astar.find_neighboors()
@@ -20,6 +20,9 @@ if __name__ == "__main__":
         astar.select_minimum()
     print(astar.mapm)
     print(astar.way)
+    print(astar.count_gn)
+    #astar.clean_way(rows,cols)
+  
     
 
 
