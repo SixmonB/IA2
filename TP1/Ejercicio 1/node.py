@@ -1,14 +1,19 @@
 class New_node(object):
-    def __init__(self, name, position, begining, finish):
+    def __init__(self, name, position, begining, finish, level):
+        # name = numero que indica el numero de nodo generado 
+        # position = vector de variables articulares
+        # value = indica si el nodo ya fue abierto o no
+        # begining y finish se usan para calcular la funcion heuristica
+        # level = nivel de profundidad en el arbol de datos
         self.name = name
         self.position = position
         self.value = 0
         self.begining = begining
         self.finish = finish
+        self.level = level
         distance_origin = 0
         distance_end = 0
         max_dist = 0
-        g_n = 0
         for i in range(6):
             # tomamos la maxima diferencia entre la posicion actual y el origen 
             # para tener una referencia de la cantidad de iteraciones que hubo entre
