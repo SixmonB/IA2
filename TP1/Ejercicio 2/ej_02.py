@@ -4,14 +4,14 @@ from Astar import *
 from Node import *
 
 if __name__ == "__main__":
-    cols = 16
+    cols = 17
     rows = 16
     layout = Layout(rows,cols)
     mapxy = layout.create_map()
     halls = layout.create_halls()
     shelves = layout.create_shelves()
     init = [0,0]
-    goal = [15,15]
+    goal = [13,14]
     node_init = Node(init,None)
     node_goal = Node(goal,None)
     astar = Astar(init,goal,shelves)
