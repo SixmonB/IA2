@@ -10,14 +10,13 @@ if __name__ == "__main__":
     mapxy = layout.create_map()
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = [0,0]
+    init = [1,1]
     goal = [13,14]
     node_init = Node(init,None)
     node_goal = Node(goal,None)
     astar = Astar(init,goal,shelves)
     current_node = node_init
     all_nodes = []
-    first_it = False
     while astar.check():
         current_node.find_neighboors(shelves,goal,all_nodes)
         for i in range(len(current_node.neighboors)):
@@ -33,12 +32,11 @@ if __name__ == "__main__":
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
-    astar.clean_way(mapxy)
-    print(astar.count_gn)
     
-    
+    shortest_way,map = astar.clean_way(mapxy)
+    print("Camino mas corto: \n",shortest_way)
+    print("Layout de puntos recorridos: \n",map)
 
-    #astar.clean_way(rows,cols)
   
     
 

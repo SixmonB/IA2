@@ -58,11 +58,10 @@ class Astar:
             par = node.parent
             new_way.append(node.value)
             mapm[node.value[0],node.value[1]]=1
-            if(par.parent == None):
+            if(node.parent == None):
                 cond = False
             new_node = par
-        print(mapm)
-        print(new_way)
+        return new_way,mapm
 
     def check(self):
         return self.ch
