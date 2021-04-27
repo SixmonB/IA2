@@ -5,7 +5,6 @@ class Astar:
     def __init__(self,init,goal,shelves):
         self.init = init #Coordenadas del punto de inicio
         self.goal = goal #Coordenadas del punto meta 
-        self.shelves = shelves
         self.way = [] #Guarda al final, todos los puntos por los cuales paso el codigo 
         self.ch = True
         self.count_gn = 0 #Tiene en cuenta el costo del camino. Suma 1 en cada iteracion
