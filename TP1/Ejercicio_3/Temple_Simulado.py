@@ -1,4 +1,11 @@
-from Punto import Punto  
+import sys  
+from pathlib import Path  
+file = Path(__file__). resolve()  
+package_root_directory = file.parents [1]  
+sys.path.append(str(package_root_directory))
+
+from Ejercicio_3.Punto import Punto  
+
 from random import randint
 from math import exp
 
@@ -90,3 +97,5 @@ class Temple_Simulado():
             else:
                 if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
 
+if __name__ == '__main__':
+    print('hola')

@@ -13,7 +13,8 @@ class Astar:
         self.distance_fn = [] #f = gn + hn
         self.distance_hn = [] #Considera la distancia entre cada vecino del nodo actual y el punto meta
         self.distance_gn = [] #Guarda el costo del camino de cada vecino del nodo actual (es decir, guarda count_gn para cada vecino)
-    
+        self.shortest_way = []
+        self.way_distance = int() 
     def gn(self,neighboors): #Costo del camino, suma 1 a la funcion distance_gn en cada iteración
         for i in range(len(neighboors)):
             self.distance_gn.append(self.count_gn)
@@ -61,8 +62,11 @@ class Astar:
             if(par.parent == None):
                 cond = False
             new_node = par
-        print(mapm)
-        print(new_way)
+        # print(mapm)
+        # print(new_way)
+        self.shortest_way = new_way.copy()
+        self.way_distance = len(self.shortest_way)
+        # print(len(new_way))
 
     def check(self):
         return self.ch

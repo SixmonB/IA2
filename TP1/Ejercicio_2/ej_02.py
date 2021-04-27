@@ -1,25 +1,25 @@
-import numpy as np
-from Layout import *
-from Astar import *
-from Node import *
+import sys  
+from pathlib import Path  
+file = Path(__file__). resolve()  
 
-if __name__ == "__main__":
-    cols = 17
-    rows = 16
-    layout = Layout(rows,cols)
-    mapxy = layout.create_map()
-    halls = layout.create_halls()
-    shelves = layout.create_shelves()
-    init = [0,0]
-    goal = [13,14]
+package_root_directory = file.parents [1]  
+
+sys.path.append(str(package_root_directory))
+import numpy as np
+from Ejercicio_2.Layout import *
+from Ejercicio_2.Astar import *
+from Ejercicio_2.Node import *
+
+def Short_Way( init, goal, layout):
     node_init = Node(init,None)
     node_goal = Node(goal,None)
-    astar = Astar(init,goal,shelves)
+    astar = Astar(init,goal,layout.shelves)
     current_node = node_init
     all_nodes = []
     first_it = False
+
     while astar.check():
-        current_node.find_neighboors(shelves,goal,all_nodes)
+        current_node.find_neighboors(layout.shelves,goal,all_nodes)
         for i in range(len(current_node.neighboors)):
             if current_node.neighboors[i] not in all_nodes:
                 all_nodes.append(Node(current_node.neighboors[i],current_node))
@@ -33,8 +33,21 @@ if __name__ == "__main__":
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
-    astar.clean_way(mapxy)
-    print(astar.count_gn)
+    astar.clean_way(layout.layout)
+    return astar
+
+
+
+if __name__ == "__main__":
+    cols = 17
+    rows = 16
+    layout = Layout(rows,cols)   
+    init = [0,0]
+    goal = [13,14]
+    short = Short_Way(init,goal,layout)
+    
+    print(short.way_distance)
+    
     
     
 
