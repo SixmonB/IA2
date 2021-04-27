@@ -5,24 +5,28 @@ package_root_directory = file.parents [1]
 sys.path.append(str(package_root_directory))
 
 from Ejercicio_3.Punto import Punto  
+from Ejercicio_2.Layout import *
 
 from random import randint
 from math import exp
 
 class Temple_Simulado():
-    def __init__(self) -> None:
+    def __init__(self, orden, mapa) -> None:
         self.costo_total = int()
-        
+        self.almacen = mapa
         self.punto_inicio = Punto(0,0)
         self.punto_fin = Punto(0,0)
 
-        self.estado_actual = list() # lista de puntos de una orden
+        self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
+        self.T_INICIAL = 100
         self.TEMPERATURA = int() # o float()
+
         self.it = int() # o float()
         self.ENERGIA = float()
         self.probabilidad = float()
+        self.evolucion_costo = list()
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
@@ -31,11 +35,11 @@ class Temple_Simulado():
         for i,point in enumerate(estado):
             
             if i == 0:
-                costo += point.Distancia_Minima(estado[i+1]) + self.punto_inicio.Distancia_Minima(point)
+                costo += point.Distancia_Minima(estado[i+1],self.almacen) + self.punto_inicio.Distancia_Minima(point,self.almacen)
             
-            elif i== len(estado)-1: costo += point.Distancia_Minima(self.punto_fin)
+            elif i== len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen)
             
-            else: costo += point.Distancia_Minima(estado[i+1])
+            else: costo += point.Distancia_Minima(estado[i+1],self.almacen)
         return costo
     
     def Generar_Vecino(self):
@@ -55,7 +59,9 @@ class Temple_Simulado():
 
         #lineal
         if modo == 1:
-            pass
+            self.TEMPERATURA = self.T_INICIAL - self.it
+            
+        #cuadratico
         elif modo == 2:
             pass
         
@@ -87,7 +93,8 @@ class Temple_Simulado():
         while not terminado:
 
             self.Funcion_Decrecimiento()
-            if self.TEMPERATURA == 0 : terminado = True
+            # print(self.TEMPERATURA)
+            if self.TEMPERATURA == 0 : break
            
             self.Generar_Vecino()
             self.Calcular_Energia()
@@ -96,6 +103,34 @@ class Temple_Simulado():
             
             else:
                 if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
+            
+            self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
+            self.it += 1
+            # print(self.it)
+
+
+
+
+
 
 if __name__ == '__main__':
-    print('hola')
+    cols = 9
+    rows = 9
+    almacen = Layout(rows,cols) 
+    q_picks = 4
+    orden = list()
+    for i in range(q_picks):
+        n = randint(0, len(almacen.halls)-1)
+        a = almacen.halls[n]
+        orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+        
+    for i,pic in enumerate(orden) :
+        if i == len(orden)-1:
+            print(pic)
+        else:
+            print(pic,end=',')
+    temple = Temple_Simulado(orden,almacen)
+    temple.Iniciar_Busqueda_Local()
+    for i in temple.evolucion_costo:
+        print(i)
+    
