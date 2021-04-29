@@ -10,10 +10,10 @@ if __name__ == "__main__":
     mapxy = layout.create_map()
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = [0,1]
-    goal = [15,15]
-    node_init = Node(init,None)
-    node_goal = Node(goal,None)
+    init = [0,1] #Punto de incio
+    goal = [15,15] #Punto meta
+    node_init = Node(init,None) #Instanciamos el nodo inicio
+    node_goal = Node(goal,None) #Instanciamos el nodo meta
     astar = Astar(init,goal,shelves)
     current_node = node_init
     all_nodes = []
@@ -26,16 +26,16 @@ if __name__ == "__main__":
             #    for j in all_nodes:
             #        if(j.value == current_node.neighboors[i]):
             #            indice = all_nodes.index(j)
-            #    all_nodes.append(j)
+            #    all_nodes.append(j) 
         current_node.visited = 1
         astar.gn(current_node.neighboors)
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
     
-    shortest_way,map = astar.clean_way(mapxy)
+    shortest_way,mapxy = astar.clean_way(mapxy)
     print("Camino mas corto: \n",shortest_way)
-    print("Layout de puntos recorridos: \n",map)
+    print("Layout de puntos recorridos: \n",mapxy)
 
   
     
