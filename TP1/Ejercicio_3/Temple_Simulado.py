@@ -20,13 +20,14 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 100
+        self.T_INICIAL = 3000
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
         self.ENERGIA = float()
-        self.probabilidad = float()
+        self.umbral_probabilidad = float()
         self.evolucion_costo = list()
+        self.causa = str()
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
@@ -70,18 +71,21 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        umbral_probabilidad = int(exp(self.ENERGIA/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA/self.TEMPERATURA) *1000)
         azar = randint(0,1000)
         
-        if azar <= umbral_probabilidad: return True
+        if azar <= self.umbral_probabilidad: return True
         else: return False
 
 
     def Calcular_Energia(self):
+        '''La energia es negativa cuando el siguiente es peor que el actual.
+            pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
+         '''
         costo_actual = self.Calcular_Costo(self.estado_actual)
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
-        self.ENERGIA = costo_siguiente - costo_actual
+        self.ENERGIA = -(costo_siguiente - costo_actual)
 
         
 
@@ -89,24 +93,42 @@ class Temple_Simulado():
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
         terminado = False
-
-        while not terminado:
-
+        convergencia = False
+        it_converg = 0
+        it_max = 20
+        while not terminado and not convergencia :
+            # print(self.TEMPERATURA)
             self.Funcion_Decrecimiento()
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA == 0 : break
+            if self.TEMPERATURA == 0 :
+                self.causa = 'cantidad de iteraciones agotadas'
+                break
            
             self.Generar_Vecino()
-            self.Calcular_Energia()
             
-            if self.ENERGIA > 0: self.estado_actual = self.estado_siguiente.copy()
+
+            self.Calcular_Energia()
+            if self.ENERGIA >= 0: 
+                
+                if self.ENERGIA ==0:
+                    it_converg += 1
+                else: 
+                    it_converg = 0
+                self.estado_actual = self.estado_siguiente.copy()
             
             else:
                 if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
             
-            self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
+            self.evolucion_costo.append([self.Calcular_Costo(self.estado_actual),f'ENERGIA: {self.ENERGIA}', f'PROBABILIDAD: {self.umbral_probabilidad}'])
+            
             self.it += 1
+            if it_converg == it_max: 
+                self.causa ='Convergencia del codigo'
+                break 
+            
+            # it_converg += 1
             # print(self.it)
+        
 
 
 
@@ -123,7 +145,8 @@ if __name__ == '__main__':
         n = randint(0, len(almacen.halls)-1)
         a = almacen.halls[n]
         orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        
+    
+    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
     for i,pic in enumerate(orden) :
         if i == len(orden)-1:
             print(pic)
@@ -133,4 +156,4 @@ if __name__ == '__main__':
     temple.Iniciar_Busqueda_Local()
     for i in temple.evolucion_costo:
         print(i)
-    
+    print(temple.causa)
