@@ -98,6 +98,7 @@ class Temple_Simulado():
         it_max = 20
         while not terminado and not convergencia :
             # print(self.TEMPERATURA)
+            devolucion = str()
             self.Funcion_Decrecimiento()
             # print(self.TEMPERATURA)
             if self.TEMPERATURA == 0 :
@@ -114,13 +115,18 @@ class Temple_Simulado():
                     it_converg += 1
                 else: 
                     it_converg = 0
+                devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, SIN PROBABILIDAD' #,ESTADO ACTUAL: {self.estado_actual},                                            
                 self.estado_actual = self.estado_siguiente.copy()
             
             else:
+                devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
                 if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
+                
+                # devolucion += f'COSTO: {self.Calcular_Costo(self.estado_actual)} , ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
+
             
-            self.evolucion_costo.append([self.Calcular_Costo(self.estado_actual),f'ENERGIA: {self.ENERGIA}', f'PROBABILIDAD: {self.umbral_probabilidad}'])
-            
+            # self.evolucion_costo.append([self.Calcular_Costo(self.estado_actual),f'ENERGIA: {self.ENERGIA}', f'PROBABILIDAD: {self.umbral_probabilidad}'])
+            self.evolucion_costo.append(devolucion)
             self.it += 1
             if it_converg == it_max: 
                 self.causa ='Convergencia del codigo'
