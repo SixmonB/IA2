@@ -1,23 +1,25 @@
-import numpy as np
 
 class Orders:
-    def __init__(self,size,quant):
-        self.quant = quant
-        self.size = size
-        self.orders = np.zeros((size,quant))
+    def __init__(self,number):
+        self.content = list()
+        self.number = number
+        self.read_file()
 
     def read_file(self):
-        self.f = open('orders.txt')
-        f_content = self.f.read()
-        j=0
-        for j in range(1,self.quant,1):
-            for i in f_content:
-                print(i)
-                #if(i=="Order "+str(j)):
-                #    self.orders[j][i]=i
+        self.f = open('C:/Users/merem/Documents/MATERIAS/5to/IA2/Repos/IA2/TP1/Ejercicio 4/orders.txt','r')
+        file = self.f.readlines()
+        flag = 0
+        for i in file:
+            i=i.rstrip('\n')
+            if("Order" in i and flag==1):break
+            if(("Order "+str(self.number)) in i):flag = 1
+            if(flag == 1):
+                if not(i=='' or i=="Order "+str(self.number)):
+                    self.content.append(int(i[1:]))
+        self.f.close()
+        print(self.content)
+    
             
-ord = Orders(26,100)
-ord.read_file()
                    
                 
 
