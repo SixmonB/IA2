@@ -8,8 +8,7 @@ class Node:
         self.fn = 0
 
     def find_neighboors(self,shelves,goal,all_nodes):
-        'Encuentra todos los vecinos del punto actual'
-        ##self.neighboors = []
+        'Encuentra todos los vecinos del punto actual' 
         ri = self.value[0] #Coordenada x del punto actual
         ci = self.value[1] #Coordenada y
         self.neighboors = [[ri,ci+1],[ri,ci-1],[ri+1,ci],[ri-1,ci]] #Son todos los vecinos del punto, incluyendo estanterias
