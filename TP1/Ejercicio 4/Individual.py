@@ -7,6 +7,7 @@ class Individual:
         self.generate(prod_quant)
     
     def generate(self,prod_quant):
+        'Genera el genoma o modelo del individuo'
         for i in range(1,self.model_size):
             cond = True
             while(cond):
@@ -15,5 +16,3 @@ class Individual:
             self.model.append(ran)
         print(self.model)
         pass
-
-ind = Individual(100,100)

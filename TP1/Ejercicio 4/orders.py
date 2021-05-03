@@ -6,6 +6,7 @@ class Orders:
         self.read_file()
 
     def read_file(self):
+        'Lee el archivo y rellena una lista que contiene los productos de la orden corrspondiente'
         self.f = open('C:/Users/merem/Documents/MATERIAS/5to/IA2/Repos/IA2/TP1/Ejercicio 4/orders.txt','r')
         file = self.f.readlines()
         flag = 0
@@ -17,7 +18,6 @@ class Orders:
                 if not(i=='' or i=="Order "+str(self.number)):
                     self.content.append(int(i[1:]))
         self.f.close()
-        print(self.content)
     
             
                    
