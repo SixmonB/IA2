@@ -64,7 +64,8 @@ class Astar:
             if(node.parent == None):
                 cond = False
             new_node = par
-        return new_way,mapm
+        self.shortest_way = new_way
+        self.mapm = mapm
 
     def check(self):
         return self.ch

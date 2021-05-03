@@ -139,7 +139,8 @@ class Temple_Simulado():
 if __name__ == '__main__':
     cols = 9
     rows = 9
-    almacen = Layout(rows,cols) 
+    almacen = Layout(rows,cols)
+    print(almacen.halls)
     q_picks = 4
     orden = list()
     for i in range(q_picks):
