@@ -20,5 +20,3 @@ class Punto():
     def __str__(self) -> str:
         return f'({self.x},{self.y})'
 
-if __name__ == '__main__':
-    print('hoola')

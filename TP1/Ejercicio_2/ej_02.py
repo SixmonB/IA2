@@ -52,8 +52,8 @@ if __name__ == "__main__":
     init = [0,0]
     goal = [12,12]
     short = Short_Way(init,goal,layout)
-    
     print(short.shortest_way)
+    print(short.way_distance)
     print(short.mapm)
 
 '''if __name__ == "__main__":

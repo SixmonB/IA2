@@ -65,6 +65,7 @@ class Astar:
                 cond = False
             new_node = par
         self.shortest_way = new_way
+        self.way_distance = len(new_way)
         self.mapm = mapm
 
     def check(self):
