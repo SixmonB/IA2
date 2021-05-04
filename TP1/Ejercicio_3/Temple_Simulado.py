@@ -46,7 +46,7 @@ class Temple_Simulado():
     def Generar_Vecino(self):
         "A partir del estado actual genera el estado siguiente permutando dos de sus valores"
         
-        #generar indices de permutacion}        
+        #generar indices de permutacion        
         per_1 = randint(0,len(self.estado_actual)-1)
         per_2 = randint(0,len(self.estado_actual)-1)
        
