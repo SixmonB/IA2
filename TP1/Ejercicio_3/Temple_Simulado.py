@@ -20,7 +20,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 3000
+        self.T_INICIAL = 500
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -130,25 +130,26 @@ class Temple_Simulado():
             self.it += 1
             if it_converg == it_max: 
                 self.causa ='Convergencia del codigo'
+                for i in self.estado_actual:
+                    print(i)
                 break 
+            
             
             # it_converg += 1
             # print(self.it)
         
+        
 
-if __name__ == '__main__':
-    cols = 9
-    rows = 9
+def Execute(cols,rows,q_picks,orden):
     almacen = Layout(rows,cols)
     print(almacen.halls)
-    q_picks = 4
     orden = list()
     for i in range(q_picks):
         n = randint(0, len(almacen.halls)-1)
         a = almacen.halls[n]
         orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
     
-    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
+    #orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
     for i,pic in enumerate(orden) :
         if i == len(orden)-1:
             print(pic)

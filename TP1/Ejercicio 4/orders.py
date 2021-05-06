@@ -3,6 +3,7 @@ class Orders:
     def __init__(self,number):
         self.content = list()
         self.number = number
+        self.individual = 0
         self.read_file()
 
     def read_file(self):
@@ -18,6 +19,9 @@ class Orders:
                 if not(i=='' or i=="Order "+str(self.number)):
                     self.content.append(int(i[1:]))
         self.f.close()
+    
+
+
     
             
                    
