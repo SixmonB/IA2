@@ -26,16 +26,12 @@ class Individual:
             j+=1
     
     def assign_shelves_to_orders(self,all_orders,shelves):
-        print(self.model)
-        k = 0
         aux_list = []
         for i in all_orders:
             for j in i.content: 
                 ind = self.model.index(j)
                 aux_list.append(shelves[ind])
             self.orders_by_shelves.append(aux_list)
-            print(aux_list)
-            print("\n")
             aux_list = []
 
 

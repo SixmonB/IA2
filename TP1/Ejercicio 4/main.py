@@ -8,6 +8,7 @@ from orders import Orders
 from Individual import Individual
 from Ejercicio_2.Layout import *
 from Ejercicio_3.Temple_Simulado import *
+from Ejercicio_3.Punto import *
 
 if __name__ == "__main__":
     #Lectura de las ordenes del archivo .txt
@@ -33,6 +34,18 @@ if __name__ == "__main__":
     #Asignamos a cada producto dentro del modelo del individuo un lugar fijo en las estanerías
     for i in all_individuals:
         i.assign_products_to_shelves(shelves)
-    
+
     all_individuals[0].assign_shelves_to_orders(all_orders,shelves)
+    
+    #Creamos objetos tipo Punto para enviar a procesar por el temple simulado:
+    order_to_send = list()
+    k=0
+    for j in all_individuals[0].orders_by_shelves[0]:
+        order_to_send.append(Punto(j[0],j[1]))
+    Ejecutar_temple(store,len(order_to_send[:10]),order_to_send[:10])
+    order_to_send = []
+        
+
+            
+    
 

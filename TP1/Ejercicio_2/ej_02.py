@@ -46,8 +46,8 @@ def Short_Way(init, goal, layout):
     return astar
 
 if __name__ == "__main__":
-    cols = 15
-    rows = 15
+    cols = 18
+    rows = 18
     layout = Layout(rows,cols)      
     init = [0,0]
     goal = [12,12]

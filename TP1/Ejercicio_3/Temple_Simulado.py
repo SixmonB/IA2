@@ -20,7 +20,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 500
+        self.T_INICIAL = 100
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -140,8 +140,8 @@ class Temple_Simulado():
         
         
 
-def Execute(cols,rows,q_picks,orden):
-    almacen = Layout(rows,cols)
+def Ejecutar_temple(almacen,q_picks,orden):
+    '''almacen = Layout(rows,cols)
     print(almacen.halls)
     orden = list()
     for i in range(q_picks):
@@ -149,7 +149,33 @@ def Execute(cols,rows,q_picks,orden):
         a = almacen.halls[n]
         orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
     
-    #orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
+    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
+    '''
+    for i,pic in enumerate(orden) :
+        if i == len(orden)-1:
+            print(pic)
+        else:
+            print(pic,end=',')
+    temple = Temple_Simulado(orden,almacen)
+    temple.Iniciar_Busqueda_Local()
+    #for i in temple.evolucion_costo:
+    #    print(i)
+    print(temple.causa)
+    for i in temple.estado_actual:
+        print("X:"+str(i.x)+" Y:"+str(i.y))
+
+if __name__ == '__main__':
+    cols = 18
+    rows = 18
+    almacen = Layout(rows,cols) 
+    q_picks = 8
+    orden = list()
+    for i in range(q_picks):
+        n = randint(0, len(almacen.halls)-1)
+        a = almacen.halls[n]
+        orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+    
+    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(5,14),Punto(17,0),Punto(8,6),Punto(10,0),Punto(0,4)]
     for i,pic in enumerate(orden) :
         if i == len(orden)-1:
             print(pic)
@@ -160,3 +186,5 @@ def Execute(cols,rows,q_picks,orden):
     for i in temple.evolucion_costo:
         print(i)
     print(temple.causa)
+    for i in temple.estado_actual:
+        print("X:"+str(i.x)+" Y:"+str(i.y))
