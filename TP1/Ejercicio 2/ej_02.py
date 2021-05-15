@@ -10,8 +10,8 @@ if __name__ == "__main__":
     mapxy = layout.create_map()
     halls = layout.create_halls()
     shelves = layout.create_shelves()
-    init = [0,1]
-    goal = [15,15]
+    init = [2,14]
+    goal = [3,4]
     node_init = Node(init,None)
     node_goal = Node(goal,None)
     astar = Astar(init,goal,shelves)
