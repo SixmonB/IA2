@@ -1,10 +1,21 @@
 import random
+import sys  
+from pathlib import Path  
+file = Path(__file__). resolve()  
+package_root_directory = file.parents [1]  
+sys.path.append(str(package_root_directory))
+
+from Ejercicio_2.Layout import *
+from Ejercicio_3.Temple_Simulado import *
+from Ejercicio_3.Punto import *
 
 class Individual:
     def __init__(self,size,prod_quant,number):
         self.model = list()
         self.model_by_index = list()
         self.orders_by_shelves = list()
+        self.optimized_orders = list(list())
+        self.costs = list()
         self.model_size = size
         self.number = number
         self.generate(prod_quant)
@@ -33,6 +44,21 @@ class Individual:
                 aux_list.append(shelves[ind])
             self.orders_by_shelves.append(aux_list)
             aux_list = []
+    
+    def optimize_orders(self,store):
+        'Optimiza todas las ordenes - Para ello ejecutamos el temple simulado'
+        order_to_optimize = list()
+        k=0
+        for i in self.orders_by_shelves:
+            for j in i:
+                order_to_optimize.append(Punto(j[0],j[1]))
+            [order,total_cost]=Ejecutar_temple(store,len(order_to_optimize),order_to_optimize)
+            self.costs.append(total_cost)
+            self.optimized_orders[k].append(order)
+            order_to_optimize = []
+            k+=1
+        
+
 
 
 

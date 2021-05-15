@@ -23,6 +23,7 @@ from Ejercicio_2.Node import *
 
 def Short_Way(init, goal, layout):
     node_init = Node(init,None)
+    node_goal = Node(goal,None)
     astar = Astar(init,goal,layout.shelves)
     current_node = node_init
     all_nodes = []
@@ -42,19 +43,23 @@ def Short_Way(init, goal, layout):
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
+        print(current_node.value)
     astar.clean_way(layout.layout)
     return astar
 
 if __name__ == "__main__":
-    cols = 18
-    rows = 18
-    layout = Layout(rows,cols)      
-    init = [0,0]
-    goal = [12,12]
+    cols = 19
+    rows = 19
+    layout = Layout(rows,cols)    
+    #print(layout.layout)  
+    #print(layout.shelves)
+    #print([2,14] in layout.shelves)
+    init = [2,14]
+    goal = [3,4]
     short = Short_Way(init,goal,layout)
     print(short.shortest_way)
     print(short.way_distance)
-    print(short.mapm)
+    ##print(short.mapm)
 
 '''if __name__ == "__main__":
     cols = 17

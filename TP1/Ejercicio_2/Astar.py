@@ -70,6 +70,7 @@ class Astar:
 
     def check(self):
         return self.ch
+    
 
 
 

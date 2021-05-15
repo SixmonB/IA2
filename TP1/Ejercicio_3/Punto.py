@@ -14,9 +14,10 @@ class Punto():
 
     def Distancia_Minima(self, otro, almacen):
         "Obtiene el valor de COSTO del camino mas corto hacia otro punto a traves de A*"
-                  
+        print("X:"+str(self.x)+" "+"Y: "+str(self.y))
         short = Short_Way([self.x,self.y],[otro.x,otro.y],almacen)
-        return short.way_distance *100
+        retorno = short.way_distance *100
+        return retorno
     def __str__(self) -> str:
         return f'({self.x},{self.y})'
 

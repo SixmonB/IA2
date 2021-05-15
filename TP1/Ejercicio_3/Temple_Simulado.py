@@ -20,7 +20,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 100
+        self.T_INICIAL = 600
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -32,15 +32,17 @@ class Temple_Simulado():
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
         costo =  int()
-        
+
         for i,point in enumerate(estado):
             
             if i == 0:
                 costo += point.Distancia_Minima(estado[i+1],self.almacen) + self.punto_inicio.Distancia_Minima(point,self.almacen)
             
-            elif i== len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen)
+            elif i== len(estado)-1: 
+                costo += point.Distancia_Minima(self.punto_fin,self.almacen)
             
-            else: costo += point.Distancia_Minima(estado[i+1],self.almacen)
+            else:
+                costo += point.Distancia_Minima(estado[i+1],self.almacen)
         return costo
     
     def Generar_Vecino(self):
@@ -55,7 +57,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo =1):
+    def Funcion_Decrecimiento(self , modo =2):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -64,7 +66,8 @@ class Temple_Simulado():
             
         #cuadratico
         elif modo == 2:
-            pass
+            self.TEMPERATURA = int(self.T_INICIAL*exp(-self.it))
+        print(self.TEMPERATURA)
         
     def Calcular_probabilidad(self):
         "Calcula la probabilidad y luego de manera aleatoria decide si fue positiva o negativa"
@@ -83,6 +86,7 @@ class Temple_Simulado():
             pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
          '''
         costo_actual = self.Calcular_Costo(self.estado_actual)
+        print("Costo actual")
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
         self.ENERGIA = -(costo_siguiente - costo_actual)
@@ -107,7 +111,6 @@ class Temple_Simulado():
            
             self.Generar_Vecino()
             
-
             self.Calcular_Energia()
             if self.ENERGIA >= 0: 
                 
@@ -163,10 +166,12 @@ def Ejecutar_temple(almacen,q_picks,orden):
     print(temple.causa)
     for i in temple.estado_actual:
         print("X:"+str(i.x)+" Y:"+str(i.y))
+    
+    return temple.estado_actual,temple.costo_total
 
 if __name__ == '__main__':
-    cols = 18
-    rows = 18
+    cols = 19
+    rows = 19
     almacen = Layout(rows,cols) 
     q_picks = 8
     orden = list()
@@ -175,7 +180,7 @@ if __name__ == '__main__':
         a = almacen.halls[n]
         orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
     
-    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(5,14),Punto(17,0),Punto(8,6),Punto(10,0),Punto(0,4)]
+    orden = [Punto(9,7),Punto(4,7),Punto(8,4),Punto(9,16),Punto(1,13),Punto(10,8),Punto(6,17),Punto(7,14),Punto(3,1),Punto(1,11),Punto(7,17),Punto(2,14),Punto(3,2),Punto(3,16),Punto(10,1),Punto(2,17),Punto(2,4),Punto(8,11)]
     for i,pic in enumerate(orden) :
         if i == len(orden)-1:
             print(pic)

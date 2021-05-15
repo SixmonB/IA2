@@ -12,6 +12,7 @@ class Node:
         ri = self.value[0] #Coordenada x del punto actual
         ci = self.value[1] #Coordenada y
         self.neighboors = [[ri,ci+1],[ri,ci-1],[ri+1,ci],[ri-1,ci]] #Son todos los vecinos del punto, incluyendo estanterias
+        print(self.neighboors)
         self.remove_neighboors_shelves(shelves,goal)
     
     def remove_neighboors_shelves(self,shelves,goal):
@@ -24,4 +25,5 @@ class Node:
                 to_remove.append(i)
         for i in range(len(to_remove)): #Elimina los valores que en el for anterior guardamos en el vector "to_remove"
             self.neighboors.remove(to_remove[i])
+    
 
