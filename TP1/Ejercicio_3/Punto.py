@@ -1,4 +1,3 @@
-from IA2.TP1.Ejercicio_3.Cache_mem import create_file
 import sys  
 from pathlib import Path  
 file = Path(__file__). resolve()  

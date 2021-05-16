@@ -9,8 +9,8 @@ def create_file(rows,cols):
 def write_file(file,x1,y1,x2,y2,cost):
     p1 = str([x1,y1])
     p2 = str([x2,y2])
-    file.write(p1+","+p2+"="+str(cost))
-    file.close()
+    file.write(p1+","+p2+"="+str(cost)+"\n")
+    
 
 
 

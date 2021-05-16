@@ -1,4 +1,3 @@
-from IA2.TP1.Ejercicio_3.Cache_mem import create_file, write_file
 import sys  
 from pathlib import Path  
 file = Path(__file__). resolve()  
@@ -49,7 +48,7 @@ class Temple_Simulado():
             
             else:
                 costo += point.Distancia_Minima(estado[i+1],self.almacen,file)
-
+        file.close()
         return costo
     
     def Generar_Vecino(self):
