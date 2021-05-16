@@ -17,26 +17,31 @@ if __name__ == "__main__":
     astar = Astar(init,goal,shelves)
     current_node = node_init
     all_nodes = []
+    all_nodes_values = []
     while astar.check():
         current_node.find_neighboors(shelves,goal,all_nodes) #Se buscan los vecinos del nodo actual y se los agrega a la lista neighboors
-        for i in range(len(current_node.neighboors)):
-            #if current_node.neighboors[i] not in all_nodes: #Creamos los OBJETOS de tipo nodo, de cada vecino del nodo actual y los agregamos a la lista all_nodes
-            all_nodes.append(Node(current_node.neighboors[i],current_node))
-            #else:
-            #    for j in all_nodes:
-            #        if(j.value == current_node.neighboors[i]):
-            #            indice = all_nodes.index(j)
-            #    all_nodes.append(j)
+        for i in current_node.neighboors:
+            if (i not in all_nodes_values):
+                all_nodes.append(Node(i,current_node))
+            else:
+                for j in all_nodes:
+                    if(j.value == i):
+                        all_nodes.append(j)
+                        break
         current_node.visited = 1
         astar.gn(current_node.neighboors)
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
+        all_nodes_values = []
+        for i in all_nodes:
+            all_nodes_values.append(i.value)
     
     shortest_way,map = astar.clean_way(mapxy)
-    print("Camino mas corto: \n",shortest_way)
-    print("Layout de puntos recorridos: \n",map)
-
+    print("Camino mas corto: ",shortest_way)
+    print("Costo del camino: ",len(shortest_way))
+    print("Layout de puntos recorridos: ")
+    print(map)
   
     
 
