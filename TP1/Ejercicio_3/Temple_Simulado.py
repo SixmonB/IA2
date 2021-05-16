@@ -1,3 +1,4 @@
+from IA2.TP1.Ejercicio_3.Cache_mem import create_file, write_file
 import sys  
 from pathlib import Path  
 file = Path(__file__). resolve()  
@@ -6,6 +7,7 @@ sys.path.append(str(package_root_directory))
 
 from Ejercicio_3.Punto import Punto  
 from Ejercicio_2.Layout import *
+from Ejercicio_3.Cache_mem import *
 
 from random import randint
 from math import exp
@@ -20,7 +22,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 600
+        self.T_INICIAL = 1000
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -29,20 +31,25 @@ class Temple_Simulado():
         self.evolucion_costo = list()
         self.causa = str()
 
+        self.rows = almacen.rows
+        self.cols = almacen.cols
+
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
         costo =  int()
+        file = create_file(self.rows,self.cols)
 
         for i,point in enumerate(estado):
             
             if i == 0:
-                costo += point.Distancia_Minima(estado[i+1],self.almacen) + self.punto_inicio.Distancia_Minima(point,self.almacen)
+                costo += point.Distancia_Minima(estado[i+1],self.almacen,file) + self.punto_inicio.Distancia_Minima(point,self.almacen,file)
             
             elif i== len(estado)-1: 
-                costo += point.Distancia_Minima(self.punto_fin,self.almacen)
+                costo += point.Distancia_Minima(self.punto_fin,self.almacen,file)
             
             else:
-                costo += point.Distancia_Minima(estado[i+1],self.almacen)
+                costo += point.Distancia_Minima(estado[i+1],self.almacen,file)
+
         return costo
     
     def Generar_Vecino(self):
@@ -67,7 +74,6 @@ class Temple_Simulado():
         #cuadratico
         elif modo == 2:
             self.TEMPERATURA = int(self.T_INICIAL*exp(-self.it))
-        print(self.TEMPERATURA)
         
     def Calcular_probabilidad(self):
         "Calcula la probabilidad y luego de manera aleatoria decide si fue positiva o negativa"
@@ -86,7 +92,7 @@ class Temple_Simulado():
             pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
          '''
         costo_actual = self.Calcular_Costo(self.estado_actual)
-        print("Costo actual")
+       # print("Costo actual")
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
         self.ENERGIA = -(costo_siguiente - costo_actual)
@@ -133,9 +139,9 @@ class Temple_Simulado():
             self.it += 1
             if it_converg == it_max: 
                 self.causa ='Convergencia del codigo'
-                for i in self.estado_actual:
-                    print(i)
-                break 
+                #for i in self.estado_actual:
+                #    print(i)
+                #break 
             
             
             # it_converg += 1
@@ -144,16 +150,6 @@ class Temple_Simulado():
         
 
 def Ejecutar_temple(almacen,q_picks,orden):
-    '''almacen = Layout(rows,cols)
-    print(almacen.halls)
-    orden = list()
-    for i in range(q_picks):
-        n = randint(0, len(almacen.halls)-1)
-        a = almacen.halls[n]
-        orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-    
-    orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
-    '''
     for i,pic in enumerate(orden) :
         if i == len(orden)-1:
             print(pic)
@@ -164,14 +160,14 @@ def Ejecutar_temple(almacen,q_picks,orden):
     #for i in temple.evolucion_costo:
     #    print(i)
     print(temple.causa)
-    for i in temple.estado_actual:
-        print("X:"+str(i.x)+" Y:"+str(i.y))
+    #for i in temple.estado_actual:
+    #    print("X:"+str(i.x)+" Y:"+str(i.y))
     
     return temple.estado_actual,temple.costo_total
 
 if __name__ == '__main__':
     cols = 19
-    rows = 19
+    rows = 21
     almacen = Layout(rows,cols) 
     q_picks = 8
     orden = list()

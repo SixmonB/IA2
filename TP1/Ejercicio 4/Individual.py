@@ -48,15 +48,18 @@ class Individual:
     def optimize_orders(self,store):
         'Optimiza todas las ordenes - Para ello ejecutamos el temple simulado'
         order_to_optimize = list()
+        aux = list()
         k=0
         for i in self.orders_by_shelves:
             for j in i:
                 order_to_optimize.append(Punto(j[0],j[1]))
             [order,total_cost]=Ejecutar_temple(store,len(order_to_optimize),order_to_optimize)
             self.costs.append(total_cost)
-            self.optimized_orders[k].append(order)
+            aux.append(order)
+            self.optimized_orders.append(aux)
             order_to_optimize = []
             k+=1
+            print("Orden: ",k)
         
 
 
