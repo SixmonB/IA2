@@ -11,6 +11,8 @@ class Astar:
         self.distance_fn = [] #f = gn + hn
         self.distance_hn = [] #Guarda la distancia hn de cada vecino del nodo actual
         self.distance_gn = [] #Guarda el costo del camino de cada vecino del nodo actual 
+        self.deleted_nodes = []
+        self.deleted_nodes_values = []
     
     def gn(self,neighboors): 
         'Calcula el costo del camino de cada vecino del punto actual, hasta el nodo inicio'
@@ -29,6 +31,7 @@ class Astar:
         'f = gn + hn'
         for i in range(len(neighboors)):
             self.distance_fn.append(self.distance_gn[i] + self.distance_hn[i])
+        #print(self.distance_fn)
 
     def select_minimum(self,current_node,nodes):
         'Selecciona el nodo de menor f, ya sea vecino del nodo actual o no'
