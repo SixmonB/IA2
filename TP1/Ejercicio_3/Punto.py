@@ -15,7 +15,7 @@ class Punto():
         "Obtiene el valor de COSTO del camino mas corto hacia otro punto a traves de A*"
                   
         short = Short_Way([self.x,self.y],[otro.x,otro.y],almacen)
-        return short.way_distance *100
+        return short.way_distance 
     def __str__(self) -> str:
         return f'({self.x},{self.y})'
 if __name__ == '__main__':
