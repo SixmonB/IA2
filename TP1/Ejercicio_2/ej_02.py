@@ -39,13 +39,13 @@ def Short_Way( init, goal, layout):
 
 
 if __name__ == "__main__":
-    cols = 9
-    rows = 9
+    cols = 13
+    rows = 14
     layout = Layout(rows,cols)    
     print(layout.shelves)   
     print(layout.layout)   
-    init = [0,0]
-    goal = [7,3]
+    init = [4,12]
+    goal = [0,0]
     short = Short_Way(init,goal,layout)
     
     print(short.way_distance)

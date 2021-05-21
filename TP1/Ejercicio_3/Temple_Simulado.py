@@ -23,8 +23,8 @@ class Temple_Simulado():
     def __init__(self, orden, mapa) -> None:
         self.costo_total = int()
         self.almacen = mapa
-        self.punto_inicio = Punto(0,0)
-        self.punto_fin = Punto(0,0)
+        self.punto_inicio = Punto(4,4)
+        self.punto_fin = Punto(4,4)
 
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
@@ -101,10 +101,10 @@ class Temple_Simulado():
         '''La energia es negativa cuando el siguiente es peor que el actual.
             pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
          '''
-        costo_actual = self.Calcular_Costo(self.estado_actual)
+        self.costo_actual = self.Calcular_Costo(self.estado_actual)
 
-        costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
-        self.ENERGIA = -(costo_siguiente - costo_actual)
+        self.costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
+        self.ENERGIA = -(self.costo_siguiente - self.costo_actual)
 
         
 
@@ -138,10 +138,13 @@ class Temple_Simulado():
                     it_converg = 0
                 # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, SIN PROBABILIDAD' #,ESTADO ACTUAL: {self.estado_actual},                                            
                 self.estado_actual = self.estado_siguiente.copy()
+                self.costo_actual = self.costo_siguiente
             
             else:
                 # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
-                if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
+                if self.Calcular_probabilidad(): 
+                    self.estado_actual = self.estado_siguiente.copy()
+                    self.costo_actual = self.costo_siguiente
                 
                 # devolucion += f'COSTO: {self.Calcular_Costo(self.estado_actual)} , ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
 
@@ -165,6 +168,14 @@ def normalizar(array):
     array = array/abs(array).max()   
     return array
 
+def str_orden(orden):
+    ord = str()
+    for i,pic in enumerate(orden) :
+        if i == len(orden)-1:
+            ord += str(pic)
+        else:
+            ord += str(pic)+','
+    return(ord)
 
 
 
@@ -185,19 +196,15 @@ if __name__ == '__main__':
        
         #generar orden 
         orden = list()
-        for i in range(q_picks):
-            n = randint(0, len(almacen.halls)-1)
-            a = almacen.halls[n]
-            orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+        # for i in range(q_picks):
+        #     n = randint(0, len(almacen.halls)-1)
+        #     a = almacen.halls[n]
+        #     orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+        orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
 
 
-        
-        for i,pic in enumerate(orden) :
-            if i == len(orden)-1:
-                print(pic)
-            else:
-                print(pic,end=',')
+        print(str_orden(orden) )
+                
         temple = Temple_Simulado(orden,almacen)
         temple.Iniciar_Busqueda_Local()
         # n_iteracion = np.array(temple.evolucion_costo[0])
@@ -209,6 +216,9 @@ if __name__ == '__main__':
         # graficos_evolucion.append((n_iteracion,calidad))
         graf  = plt.plot(n_iteracion,calidad)
         print(temple.causa)
+        print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
+        print('El costo es ifgual a: ', temple.costo_actual)
+        print('\n')
 
 
     
