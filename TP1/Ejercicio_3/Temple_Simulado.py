@@ -1,3 +1,4 @@
+
 import math
 import sys  
 from pathlib import Path
@@ -11,7 +12,9 @@ sys.path.append(str(package_root_directory))
 import matplotlib.pyplot as plt
 import numpy as np
 from Ejercicio_3.Punto import Punto  
+from Ejercicio_3.cache import *
 from Ejercicio_2.Layout import *
+
 
 from random import randint
 from math import exp
@@ -42,16 +45,18 @@ class Temple_Simulado():
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
+        global memoria
         costo =  int()
         
         for i,point in enumerate(estado):
             
             if i == 0:
-                costo += point.Distancia_Minima(estado[i+1],self.almacen) + self.punto_inicio.Distancia_Minima(point,self.almacen)
+                
+                costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria) + self.punto_inicio.Distancia_Minima(point,self.almacen,memoria)
             
-            elif i== len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen)
+            elif i == len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen,memoria)
             
-            else: costo += point.Distancia_Minima(estado[i+1],self.almacen)
+            else: costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria)
         return costo
     
     def Generar_Vecino(self):
@@ -106,11 +111,13 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
+        it_max =1000
+        
         terminado = False
         convergencia = False
         it_converg = 0
-        it_max = 200
-        while not terminado and not convergencia :
+        it_converg_max = 200
+        while not terminado and not convergencia and self.it < it_max:
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
@@ -145,10 +152,12 @@ class Temple_Simulado():
             self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
 
             self.it += 1
-            if it_converg == it_max: 
+            if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
-            
+            if self.it == it_max   :
+                self.causa = f'Iteraciones agotadas {self.it}'
+                break
             # it_converg += 1
             # print(self.it)
         
@@ -163,22 +172,27 @@ def normalizar(array):
 if __name__ == '__main__':
     
     
-    cols = 9
-    rows = 10
+    cols = 13
+    rows = 14
     almacen = Layout(rows,cols) 
     q_picks = 4
-    q_ordenes = 20
-    
+    q_ordenes = 10
+    memoria = Cache()
     graficos_evolucion = list()
+
     for j in range(q_ordenes):
+       
+       
         #generar orden 
         orden = list()
         for i in range(q_picks):
             n = randint(0, len(almacen.halls)-1)
             a = almacen.halls[n]
             orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+
+
         
-        # orden = [Punto(3,0),Punto(7,6),Punto(1,0),Punto(0,3)]
         for i,pic in enumerate(orden) :
             if i == len(orden)-1:
                 print(pic)
