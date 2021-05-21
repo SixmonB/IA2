@@ -17,26 +17,34 @@ def Short_Way( init, goal, layout):
     current_node = node_init
     all_nodes = []
     first_it = False
+    all_nodes_values = []
+    count = 0
 
     while astar.check():
+        count +=1
         current_node.find_neighboors(layout.shelves,goal,all_nodes)
-        for i in range(len(current_node.neighboors)):
-            if current_node.neighboors[i] not in all_nodes:
-                all_nodes.append(Node(current_node.neighboors[i],current_node))
+        for i in current_node.neighboors:
+            if (i not in all_nodes_values):
+                all_nodes.append(Node(i,current_node))
             else:
                 for j in all_nodes:
-                    if(j.value == current_node.neighboors[i]):
-                        indice = all_nodes.index(j)
-                all_nodes.append(j)
+                    if(j.value == i):
+                        all_nodes.append(j)
+                        break
         current_node.visited = 1
         astar.gn(current_node.neighboors)
         astar.hn(current_node.neighboors)
         astar.fn(current_node.neighboors)
         current_node = astar.select_minimum(current_node,all_nodes)
+        all_nodes_values = []
+        for i in all_nodes:
+            all_nodes_values.append(i.value)   
+   
     astar.clean_way(layout.layout)
     return astar
+    
 
-
+    
 
 if __name__ == "__main__":
     cols = 13
@@ -48,7 +56,11 @@ if __name__ == "__main__":
     goal = [0,0]
     short = Short_Way(init,goal,layout)
     
-    print(short.way_distance)
+    
+    print("Camino mas corto: ",short.shortest_way)
+    print("Costo del camino: ",short.way_distance)
+    print("Layout: ")
+    print(short.mapm)
     
     
     

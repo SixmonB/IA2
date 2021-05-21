@@ -165,7 +165,9 @@ class Temple_Simulado():
             # print(self.it)
         
 def normalizar(array):
-    array = array/abs(array).max()   
+    # array = (abs(array).max()-array)/(abs(array).max()  - abs(array).min())
+    array = (array + abs(array).min())/(abs(array).max()  + abs(array).min())
+
     return array
 
 def str_orden(orden):
@@ -183,8 +185,8 @@ def str_orden(orden):
 if __name__ == '__main__':
     
     
-    cols = 13
-    rows = 14
+    cols = 14
+    rows = 16
     almacen = Layout(rows,cols) 
     q_picks = 4
     q_ordenes = 10
@@ -196,11 +198,11 @@ if __name__ == '__main__':
        
         #generar orden 
         orden = list()
-        # for i in range(q_picks):
-        #     n = randint(0, len(almacen.halls)-1)
-        #     a = almacen.halls[n]
-        #     orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+        for i in range(q_picks):
+            n = randint(0, len(almacen.halls)-1)
+            a = almacen.halls[n]
+            orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
 
 
         print(str_orden(orden) )
@@ -217,12 +219,14 @@ if __name__ == '__main__':
         graf  = plt.plot(n_iteracion,calidad)
         print(temple.causa)
         print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
-        print('El costo es ifgual a: ', temple.costo_actual)
+        print('El costo: ', temple.costo_actual)
+        print('Cantidad de iteraciones: ', temple.it)
         print('\n')
+        plt.show()
 
 
     
-    plt.show()
+    # plt.show()
 
     # for i in temple.evolucion_costo:
     #     print(i)

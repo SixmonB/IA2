@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 class Astar:
     def __init__(self,init,goal,shelves):
         self.init = init #Coordenadas del punto de inicio
@@ -13,13 +14,38 @@ class Astar:
         self.distance_gn = [] #Guarda el costo del camino de cada vecino del nodo actual 
         self.deleted_nodes = []
         self.deleted_nodes_values = []
-        self.shortest_way = []
-        self.way_distance = int()
+        
+        self.shortest_way = []     # no esta
+        # self.way_distance = int()  # no esta
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
     def gn(self,neighboors): 
         'Calcula el costo del camino de cada vecino del punto actual, hasta el nodo inicio'
         for i in range(len(neighboors)):
             self.distance_gn.append(self.count_gn)
         self.count_gn+=1
+
+    
+    
+        
+        
+        
+        
+
 
     def hn(self,neighboors): 
         'Distancia euclideana de cada vecino del punto actual, hasta el nodo fin'
@@ -27,12 +53,26 @@ class Astar:
             r1 = pow((i[0] - self.goal[0]),2)
             r2 = pow((i[1] - self.goal[1]),2)
             self.distance_hn.append(math.sqrt(r1+r2)*2)
+
+        
+        
+            
+            
+            
+
+
         
     def fn(self,neighboors): 
         'f = gn + hn'
         for i in range(len(neighboors)):
             self.distance_fn.append(self.distance_gn[i] + self.distance_hn[i])
         #print(self.distance_fn)
+
+    
+        
+        
+        
+        
 
     def select_minimum(self,current_node,nodes):
         'Selecciona el nodo de menor f, ya sea vecino del nodo actual o no'
@@ -54,6 +94,13 @@ class Astar:
         self.distance_hn = []
         return nodes[index_min]
 
+    
+
+
+
+
+
+
     def clean_way(self,mapm):
         'Se eliminan del camino final todos las ramificaciones fuera de la rama principal'
         n = len(self.way) - 1 
@@ -71,10 +118,26 @@ class Astar:
         self.shortest_way = new_way
         self.way_distance = len(new_way)
         self.mapm = mapm
+    
+        
+       
+
 
     def check(self):
         return self.ch
-    
+        
+
+
+#####################################
+
+
+
+
+
+
+
+ 
+        
 
 
 
