@@ -14,7 +14,7 @@ from Ejercicio_3.Punto import *
 if __name__ == "__main__":
     #Lectura de las ordenes del archivo .txt
     indiv_quant = 10
-    historal_orders = 100
+    historal_orders = 30
     all_orders = list()
     for i in range(1,historal_orders+1):
         all_orders.append(Orders(i))
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     for i in all_individuals:
         i.assign_products_to_shelves(shelves)
 
-    all_individuals[0].assign_shelves_to_orders(all_orders,shelves)
+    all_individuals[0].assign_shelves_to_orders(all_orders[0:40],shelves)
     
     #Creamos objetos tipo Punto para enviar a procesar por el temple simulado:
     all_individuals[0].optimize_orders(store)

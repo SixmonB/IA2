@@ -55,11 +55,16 @@ class Individual:
                 order_to_optimize.append(Punto(j[0],j[1]))
             [order,total_cost]=Ejecutar_temple(store,len(order_to_optimize),order_to_optimize)
             self.costs.append(total_cost)
+            print(total_cost)
             aux.append(order)
             self.optimized_orders.append(aux)
             order_to_optimize = []
             k+=1
             print("Orden: ",k)
+        
+    def total_cost_by_order(self):
+        pass
+    
         
 
 

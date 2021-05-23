@@ -1,12 +1,19 @@
+import math
 import sys  
-from pathlib import Path  
+from pathlib import Path
+
+from numpy.core.records import array  
 file = Path(__file__). resolve()  
 package_root_directory = file.parents [1]  
 sys.path.append(str(package_root_directory))
 
+
+import matplotlib.pyplot as plt
+import numpy as np
 from Ejercicio_3.Punto import Punto  
+from Ejercicio_3.cache import *
 from Ejercicio_2.Layout import *
-from Ejercicio_3.Cache_mem import *
+
 
 from random import randint
 from math import exp
@@ -25,36 +32,36 @@ class Temple_Simulado():
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
+        
         self.ENERGIA = float()
         self.umbral_probabilidad = float()
-        self.evolucion_costo = list()
+        
         self.causa = str()
 
-        self.rows = almacen.rows
-        self.cols = almacen.cols
+        #para graficar
+        self.eje_x = list()#np.array([])
+        self.evolucion_costo = list()#np.array([])#list()
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
+        global memoria
         costo =  int()
-        file = create_file(self.rows,self.cols)
-
+        
         for i,point in enumerate(estado):
             
             if i == 0:
-                costo += point.Distancia_Minima(estado[i+1],self.almacen,file) + self.punto_inicio.Distancia_Minima(point,self.almacen,file)
+                
+                costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria) + self.punto_inicio.Distancia_Minima(point,self.almacen,memoria)
             
-            elif i== len(estado)-1: 
-                costo += point.Distancia_Minima(self.punto_fin,self.almacen,file)
+            elif i == len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen,memoria)
             
-            else:
-                costo += point.Distancia_Minima(estado[i+1],self.almacen,file)
-        file.close()
+            else: costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria)
         return costo
     
     def Generar_Vecino(self):
         "A partir del estado actual genera el estado siguiente permutando dos de sus valores"
         
-        #generar indices de permutacion        
+        #generar indices de permutacion}        
         per_1 = randint(0,len(self.estado_actual)-1)
         per_2 = randint(0,len(self.estado_actual)-1)
        
@@ -63,7 +70,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo =2):
+    def Funcion_Decrecimiento(self , modo =3):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -72,7 +79,10 @@ class Temple_Simulado():
             
         #cuadratico
         elif modo == 2:
-            self.TEMPERATURA = int(self.T_INICIAL*exp(-self.it))
+            self.TEMPERATURA = self.T_INICIAL - self.it*2
+        elif modo == 3:
+            if self.it == 0: self.TEMPERATURA = self.T_INICIAL
+            self.TEMPERATURA = self.TEMPERATURA/2
         
     def Calcular_probabilidad(self):
         "Calcula la probabilidad y luego de manera aleatoria decide si fue positiva o negativa"
@@ -91,7 +101,6 @@ class Temple_Simulado():
             pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
          '''
         costo_actual = self.Calcular_Costo(self.estado_actual)
-       # print("Costo actual")
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
         self.ENERGIA = -(costo_siguiente - costo_actual)
@@ -101,21 +110,24 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
+        it_max =1000
+        
         terminado = False
         convergencia = False
         it_converg = 0
-        it_max = 20
-        while not terminado and not convergencia :
+        it_converg_max = 200
+        while not terminado and not convergencia and self.it < it_max:
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA == 0 :
-                self.causa = 'cantidad de iteraciones agotadas'
+            if self.TEMPERATURA <= 0   :
+                self.causa = f'Iteraciones agotadas {self.it}'
                 break
            
             self.Generar_Vecino()
             
+
             self.Calcular_Energia()
             if self.ENERGIA >= 0: 
                 
@@ -123,68 +135,76 @@ class Temple_Simulado():
                     it_converg += 1
                 else: 
                     it_converg = 0
-                devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, SIN PROBABILIDAD' #,ESTADO ACTUAL: {self.estado_actual},                                            
+                # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, SIN PROBABILIDAD' #,ESTADO ACTUAL: {self.estado_actual},                                            
                 self.estado_actual = self.estado_siguiente.copy()
             
             else:
-                devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
+                # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
                 if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
                 
                 # devolucion += f'COSTO: {self.Calcular_Costo(self.estado_actual)} , ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
 
             
             # self.evolucion_costo.append([self.Calcular_Costo(self.estado_actual),f'ENERGIA: {self.ENERGIA}', f'PROBABILIDAD: {self.umbral_probabilidad}'])
-            self.evolucion_costo.append(devolucion)
+            
+            self.eje_x.append(self.it) 
+            self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
+
             self.it += 1
-            if it_converg == it_max: 
+            if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
-                #for i in self.estado_actual:
-                #    print(i)
-                #break 
-            
-            
+                break 
+            if self.it == it_max   :
+                self.causa = f'Iteraciones agotadas {self.it}'
+                break
             # it_converg += 1
             # print(self.it)
         
-        
+def normalizar(array):
+    array = array/abs(array).max()   
+    return array
 
-def Ejecutar_temple(almacen,q_picks,orden):
-    for i,pic in enumerate(orden) :
-        if i == len(orden)-1:
-            print(pic)
-        else:
-            print(pic,end=',')
-    temple = Temple_Simulado(orden,almacen)
-    temple.Iniciar_Busqueda_Local()
-    #for i in temple.evolucion_costo:
-    #    print(i)
-    print(temple.causa)
-    #for i in temple.estado_actual:
-    #    print("X:"+str(i.x)+" Y:"+str(i.y))
-    
-    return temple.estado_actual,temple.costo_total
+
+
+
 
 if __name__ == '__main__':
-    cols = 19
-    rows = 21
-    almacen = Layout(rows,cols) 
-    q_picks = 8
-    orden = list()
-    for i in range(q_picks):
-        n = randint(0, len(almacen.halls)-1)
-        a = almacen.halls[n]
-        orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
     
-    orden = [Punto(9,7),Punto(4,7),Punto(8,4),Punto(9,16),Punto(1,13),Punto(10,8),Punto(6,17),Punto(7,14),Punto(3,1),Punto(1,11),Punto(7,17),Punto(2,14),Punto(3,2),Punto(3,16),Punto(10,1),Punto(2,17),Punto(2,4),Punto(8,11)]
-    for i,pic in enumerate(orden) :
-        if i == len(orden)-1:
-            print(pic)
-        else:
-            print(pic,end=',')
-    temple = Temple_Simulado(orden,almacen)
-    temple.Iniciar_Busqueda_Local()
-    for i in temple.evolucion_costo:
-        print(i)
-    print(temple.causa)
-    for i in temple.estado_actual:
-        print("X:"+str(i.x)+" Y:"+str(i.y))
+    
+    cols = 13
+    rows = 16
+    almacen = Layout(rows,cols) 
+    q_picks = 4
+    q_ordenes = 10
+    memoria = Cache()
+    graficos_evolucion = list()
+
+    for j in range(q_ordenes):
+       
+       
+        #generar orden 
+        orden = list()
+        for i in range(q_picks):
+            n = randint(0, len(almacen.halls)-1)
+            a = almacen.halls[n]
+            orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+
+
+        
+        for i,pic in enumerate(orden) :
+            if i == len(orden)-1:
+                print(pic)
+            else:
+                print(pic,end=',')
+        temple = Temple_Simulado(orden,almacen)
+        temple.Iniciar_Busqueda_Local()
+        n_iteracion = normalizar ( np.array(temple.eje_x) )
+        
+
+        calidad = normalizar( np.array(temple.evolucion_costo) )
+        # graficos_evolucion.append((n_iteracion,calidad))
+        graf  = plt.plot(n_iteracion,calidad)
+        print(temple.causa)
+
+    plt.show()
