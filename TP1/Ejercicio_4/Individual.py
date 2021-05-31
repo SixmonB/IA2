@@ -18,6 +18,7 @@ class Individual:
         self.costs = list()
         self.model_size = size
         self.number = number
+        self.avrg = 0
         self.generate(prod_quant)
     
     def generate(self,prod_quant):
@@ -45,7 +46,7 @@ class Individual:
             self.orders_by_shelves.append(aux_list)
             aux_list = []
     
-    def optimize_orders(self,store):
+    def optimize_orders(self,store,memoria):
         'Optimiza todas las ordenes - Para ello ejecutamos el temple simulado'
         order_to_optimize = list()
         aux = list()
@@ -53,17 +54,19 @@ class Individual:
         for i in self.orders_by_shelves:
             for j in i:
                 order_to_optimize.append(Punto(j[0],j[1]))
-            [order,total_cost]=Ejecutar_temple(store,len(order_to_optimize),order_to_optimize)
+            [order,total_cost]=Ejecutar_temple(store,order_to_optimize,memoria)
             self.costs.append(total_cost)
-            print(total_cost)
             aux.append(order)
             self.optimized_orders.append(aux)
             order_to_optimize = []
             k+=1
-            print("Orden: ",k)
+        print("Fin individuo numero: ",self.number)
         
-    def total_cost_by_order(self):
-        pass
+    def calculate_average_cost(self):
+        aux1 = sum(self.costs)
+        aux2 = len(self.costs)
+        self.avrg = aux1/aux2
+        print("Promedio de costos individuo numero "+str(self.number)+": "+str(self.avrg))
     
         
 

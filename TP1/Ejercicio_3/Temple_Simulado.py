@@ -13,10 +13,12 @@ import numpy as np
 from Ejercicio_3.Punto import Punto  
 from Ejercicio_3.cache import *
 from Ejercicio_2.Layout import *
+from Ejercicio_4.orders import *
 
 
 from random import randint
 from math import exp
+
 
 class Temple_Simulado():
     def __init__(self, orden, mapa) -> None:
@@ -44,7 +46,7 @@ class Temple_Simulado():
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
-        global memoria
+        #global memoria
         costo =  int()
         
         for i,point in enumerate(estado):
@@ -103,6 +105,7 @@ class Temple_Simulado():
         costo_actual = self.Calcular_Costo(self.estado_actual)
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
+        self.costo_total = self.costo_total + costo_actual + costo_siguiente
         self.ENERGIA = -(costo_siguiente - costo_actual)
 
         
@@ -164,19 +167,37 @@ def normalizar(array):
     array = array/abs(array).max()   
     return array
 
+def Ejecutar_temple(almacen,orden,memo):
+    global memoria 
+    memoria = memo
+    #memoria.Conect_db()
 
+    '''for i,pic in enumerate(orden) :
+            if i == len(orden)-1:
+                #print(pic)
+            else:
+                #print(pic,end=',')'''
+    temple = Temple_Simulado(orden,almacen)
+    temple.Iniciar_Busqueda_Local()
+    #n_iteracion = normalizar ( np.array(temple.eje_x) )
+
+    #calidad = normalizar( np.array(temple.evolucion_costo) )
+    # graficos_evolucion.append((n_iteracion,calidad))
+    #graf  = plt.plot(n_iteracion,calidad)
+    #print(temple.causa)
+    #memoria.Disconect_db()
+    return temple.estado_actual,temple.costo_total
 
 
 
 if __name__ == '__main__':
-    
-    
-    cols = 13
-    rows = 16
+    cols = 19
+    rows = 21
     almacen = Layout(rows,cols) 
     q_picks = 4
     q_ordenes = 10
     memoria = Cache()
+    #memoria.Conect_db()
     graficos_evolucion = list()
 
     for j in range(q_ordenes):
@@ -188,11 +209,9 @@ if __name__ == '__main__':
             n = randint(0, len(almacen.halls)-1)
             a = almacen.halls[n]
             orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+        #orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]'''
 
-
-        
-        for i,pic in enumerate(orden) :
+        for i,pic in enumerate(orden):
             if i == len(orden)-1:
                 print(pic)
             else:
@@ -206,5 +225,6 @@ if __name__ == '__main__':
         # graficos_evolucion.append((n_iteracion,calidad))
         graf  = plt.plot(n_iteracion,calidad)
         print(temple.causa)
-
+    
+    #memoria.Disconect_db()
     plt.show()

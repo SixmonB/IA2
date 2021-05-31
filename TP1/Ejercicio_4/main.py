@@ -9,12 +9,12 @@ from Individual import Individual
 from Ejercicio_2.Layout import *
 from Ejercicio_3.Temple_Simulado import *
 from Ejercicio_3.Punto import *
-
+from Ejercicio_3.cache import *
 
 if __name__ == "__main__":
-    #Lectura de las ordenes del archivo .txt
-    indiv_quant = 10
-    historal_orders = 30
+    #Lectura de las ordenes del archivo .txt y las almacenamos en la lista all_orders
+    indiv_quant = 10 #Cantidad de individuos a generar
+    historal_orders = 100 #Cantidad de ordenes historicas a considerar
     all_orders = list()
     for i in range(1,historal_orders+1):
         all_orders.append(Orders(i))
@@ -31,14 +31,20 @@ if __name__ == "__main__":
     rows = 21
     store = Layout(rows,cols)
     shelves = store.shelves #Lista que contiene las estanterías del almacén
+    
     #Asignamos a cada producto dentro del modelo del individuo un lugar fijo en las estanerías
     for i in all_individuals:
         i.assign_products_to_shelves(shelves)
-
-    all_individuals[0].assign_shelves_to_orders(all_orders[0:40],shelves)
     
-    #Creamos objetos tipo Punto para enviar a procesar por el temple simulado:
-    all_individuals[0].optimize_orders(store)
+    #Ejecutamos temple simulado para cada orden, para cada indviduo. Calculamos costo promedio para las ordenes de cada
+    #individuo
+    memoria = Cache()
+    for i in all_individuals:
+        i.assign_shelves_to_orders(all_orders,shelves)
+        i.optimize_orders(store,memoria)
+        i.calculate_average_cost()
+    
+    
 
         
         
