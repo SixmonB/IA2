@@ -49,29 +49,31 @@ class Genetic_algorithm:
         new_ind = sec3+sec2+sec1
         return new_ind
 
-ind1 = list()
-ind2 = list()
-for i in range(0,20,1):
-        cond = True
-        while(cond):
-            ran = randint(0,20)
-            if(ran not in ind1):cond = False
-        ind1.append(ran)
+if __name__ == "__main__":
+    ind1 = list()
+    ind2 = list()
+    n=20
+    for i in range(0,n,1):
+            cond = True
+            while(cond):
+                ran = randint(0,20)
+                if(ran not in ind1):cond = False
+            ind1.append(ran)
 
-for i in range(0,20,1):
-        cond = True
-        while(cond):
-            ran = randint(0,20)
-            if(ran not in ind2):cond = False
-        ind2.append(ran)
+    for i in range(0,n,1):
+            cond = True
+            while(cond):
+                ran = randint(0,20)
+                if(ran not in ind2):cond = False
+            ind2.append(ran)
 
-print(ind1)
-print(ind2)
-genetic = Genetic_algorithm(4,7)
-new_ind1 = genetic.order_crossing(ind1,ind2)
-new_ind2 = genetic.order_crossing(ind2,ind1)
-print(new_ind1)
-print(new_ind2)
+    print(ind1)
+    print(ind2)
+    genetic = Genetic_algorithm(4,7)
+    new_ind1 = genetic.order_crossing(ind1,ind2)
+    new_ind2 = genetic.order_crossing(ind2,ind1)
+    print(new_ind1)
+    print(new_ind2)
 
 
 

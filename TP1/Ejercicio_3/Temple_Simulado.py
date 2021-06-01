@@ -162,8 +162,6 @@ class Temple_Simulado():
             if self.it == it_max   :
                 self.causa = f'Iteraciones agotadas {self.it}'
                 break
-            # it_converg += 1
-            # print(self.it)
         
 def normalizar(array):
     array = array/abs(array).max()   
@@ -174,23 +172,11 @@ def Ejecutar_temple(almacen,orden,memo):
     memoria = memo
     #memoria.Conect_db()
 
-    '''for i,pic in enumerate(orden) :
-            if i == len(orden)-1:
-                #print(pic)
-            else:
-                #print(pic,end=',')'''
     temple = Temple_Simulado(orden,almacen)
     temple.Iniciar_Busqueda_Local()
-    #n_iteracion = normalizar ( np.array(temple.eje_x) )
 
-    #calidad = normalizar( np.array(temple.evolucion_costo) )
-    # graficos_evolucion.append((n_iteracion,calidad))
-    #graf  = plt.plot(n_iteracion,calidad)
-    #print(temple.causa)
     #memoria.Disconect_db()
     return temple.estado_actual,temple.costo_total
-
-
 
 if __name__ == '__main__':
     cols = 19
@@ -204,7 +190,6 @@ if __name__ == '__main__':
     graficos_evolucion = list()
     print(len(almacen.halls))
     for j in range(q_ordenes):
-       
        
         #generar orden 
         orden = list()

@@ -13,11 +13,17 @@ from Ejercicio_3.cache import *
 from Ejercicio_4.Genetic_algorithm import *
 from random import randint
 
+
 if __name__ == "__main__":
+    #Hiperparámetros
+
+    indiv_quant = 10 #Cantidad de individuos a generar
+    historal_orders = 100 #Cantidad de ordenes historicas a considerar
+    it = 10 #Cantidad de iteraciones
+
     #Lectura de las ordenes del archivo .txt y las almacenamos en la lista all_orders
-    indiv_quant = 20 #Cantidad de individuos a generar
-    historal_orders = 50 #Cantidad de ordenes historicas a considerar
     all_orders = list()
+    results = dict()
     for i in range(1,historal_orders+1):
         all_orders.append(Orders(i))
 
@@ -35,32 +41,31 @@ if __name__ == "__main__":
     store = Layout(rows,cols)
     shelves = store.shelves #Lista que contiene las estanterías del almacén
     costos = []
-    it = 10
+    
+    memoria = Cache()
     for k in range(0,it):
+        print("Iteracion numero: ",k)
         #Asignamos a cada producto dentro del modelo del individuo un lugar fijo en las estanerías
         for i in all_individuals:
             i.assign_products_to_shelves(shelves)
 
         #Ejecutamos temple simulado para cada orden, para cada indviduo. Calculamos costo promedio para las ordenes de cada
         #individuo
-        memoria = Cache()
         for i in all_individuals:
             i.assign_shelves_to_orders(all_orders,shelves)
             i.optimize_orders(store,memoria)
             i.calculate_average_cost()
             costos.append(i.avrg)
+            results[i.avrg] = i.model
         
-        #Crossover para cada individuo
+        #Crossover 
         #1-Creamos puntos de cruce
         while(True):
             crossing_point1 = randint(1,indiv_size-1) 
             crossing_point2 = randint(1,indiv_size-1)
             if(crossing_point1 < crossing_point2):break
                 
-        #print("Primer pto de cruce: ",crossing_point1)
-        #print("Segundo pto de cruce: ",crossing_point2)
-
-        #Ejecutamos crossover en si
+        #2-Ejecutamos crossover 
         genetic = Genetic_algorithm(crossing_point1,crossing_point2)
         new_individuals = list()
         for i in range(0,len(all_individuals),2):
@@ -76,7 +81,11 @@ if __name__ == "__main__":
             
         all_individuals = []
         all_individuals = new_individuals
-    print("Costos: ",sorted(costos))
+    
+    costs = sorted(costos)
+    print("Costos totales promedio: ",costs)
+    print("Costo promedio de mejor individuo: ",costs[0])
+    print("Mejor individuo: ",results[costs[0]])
         
     
 
