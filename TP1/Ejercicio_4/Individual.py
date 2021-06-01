@@ -10,7 +10,7 @@ from Ejercicio_3.Temple_Simulado import *
 from Ejercicio_3.Punto import *
 
 class Individual:
-    def __init__(self,size,prod_quant,number):
+    def __init__(self,size,number):
         self.model = list()
         self.model_by_index = list()
         self.orders_by_shelves = list()
@@ -19,7 +19,7 @@ class Individual:
         self.model_size = size
         self.number = number
         self.avrg = 0
-        self.generate(prod_quant)
+        
     
     def generate(self,prod_quant):
         'Genera el genoma o modelo del individuo'

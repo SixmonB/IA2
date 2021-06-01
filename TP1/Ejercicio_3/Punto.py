@@ -19,11 +19,11 @@ class Punto():
         else:
             short = Short_Way([self.x,self.y],[otro.x,otro.y],almacen)
             memo.Add_Distancia(self,otro,short.way_distance)
-            return short.way_distance 
+            return short.way_distance
         '''found = memo.Read_db(str([self.x,self.y]),str([otro.x,otro.y]))
         if found == 0:
             short = Short_Way([self.x,self.y],[otro.x,otro.y],almacen)
-            memo.Write_db(str([self.x,self.y]),str([otro.x,otro.y]),short.way_distance)
+            #memo.Write_db(str([self.x,self.y]),str([otro.x,otro.y]),short.way_distance)
             return short.way_distance 
         else:
             cost = memo.cost

@@ -30,7 +30,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 1000
+        self.T_INICIAL = 20
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -72,7 +72,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo =3):
+    def Funcion_Decrecimiento(self , modo =2):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -85,6 +85,8 @@ class Temple_Simulado():
         elif modo == 3:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/2
+        elif modo == 4:
+            self.TEMPERATURA = self.T_INICIAL*exp(-self.it)
         
     def Calcular_probabilidad(self):
         "Calcula la probabilidad y luego de manera aleatoria decide si fue positiva o negativa"
@@ -113,7 +115,7 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max =1000
+        it_max = 1000
         
         terminado = False
         convergencia = False
@@ -194,23 +196,23 @@ if __name__ == '__main__':
     cols = 19
     rows = 21
     almacen = Layout(rows,cols) 
-    q_picks = 4
-    q_ordenes = 10
+    q_picks = 25
+    q_ordenes = 30
+    global memoria
     memoria = Cache()
     #memoria.Conect_db()
     graficos_evolucion = list()
-
+    print(len(almacen.halls))
     for j in range(q_ordenes):
        
        
         #generar orden 
         orden = list()
         for i in range(q_picks):
-            n = randint(0, len(almacen.halls)-1)
-            a = almacen.halls[n]
-            orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        #orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]'''
-
+            n = randint(0, len(almacen.shelves)-1)
+            a = almacen.shelves[n]
+            orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
+        
         for i,pic in enumerate(orden):
             if i == len(orden)-1:
                 print(pic)
@@ -222,7 +224,7 @@ if __name__ == '__main__':
         
 
         calidad = normalizar( np.array(temple.evolucion_costo) )
-        # graficos_evolucion.append((n_iteracion,calidad))
+        graficos_evolucion.append((n_iteracion,calidad))
         graf  = plt.plot(n_iteracion,calidad)
         print(temple.causa)
     

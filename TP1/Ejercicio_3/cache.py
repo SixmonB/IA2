@@ -1,4 +1,4 @@
-#import sqlite3
+import sqlite3
 
 class Cache():
     'Guara la distancia entre ubicaciones apra acelerar el codigo'
@@ -37,6 +37,8 @@ class Cache():
     def Conect_db(self):
         self.con = sqlite3.connect("orders.db")
         self.cur = self.con.cursor()
+        #self.cur.execute("CREATE INDEX index_name ON orders(p1)")
+        #self.cur.execute("CREATE INDEX index_name_2 ON orders(p2)")
     
     def Create_table(self):
         self.cur.execute("CREATE TABLE orders (p1 VARCHAR(50),p2 VARCHAR(50),cost INTEGER)")
@@ -66,11 +68,12 @@ class Cache():
 memo = Cache()
 memo.Conect_db()
 #memo.Create_table()
-found = memo.Read_db([4,2],[4,4])
+found = memo.Read_db([16,3],[0,14])
 if memo.cost == 0:
     print("Not found")
-    memo.Write_db([4,2],[4,4],2)
+    memo.Write_db([16,3],[0,14],28)
 else:
     cost = memo.cost
+    print(cost)
 memo.Disconect_db()'''
 

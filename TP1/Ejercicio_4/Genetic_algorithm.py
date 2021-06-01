@@ -1,4 +1,7 @@
 
+from random import randint
+
+
 class Genetic_algorithm:
     def __init__(self,p1,p2) -> None:
         self.p1 = p1
@@ -30,28 +33,40 @@ class Genetic_algorithm:
         aux_new_ind1[:(self.p2-self.p1)]= ind2[self.p1:self.p2]
 
         inf_limit = self.p2-self.p1
-        j=0
+        cond =  True
         for i in range(inf_limit,len(aux_new_ind1)):
-            cond = True
+            j=0
             while(cond):
                 if(aux_ind1[j] in aux_new_ind1):
-                    j+=1
-                    aux_new_ind1[i]=aux_ind1[j]
-                    break
+                        j+=1
                 else:
                     aux_new_ind1[i]=aux_ind1[j]
                     break
-        #print(aux_ind1)
-        #print(aux_new_ind1)
-        new_ind1 = []
+        new_ind = []
         sec1 = aux_new_ind1[(self.p2-self.p1):(self.p2-self.p1+len(part2))]
         sec2 = aux_new_ind1[:(self.p2-self.p1)]
         sec3 = aux_new_ind1[self.p2-self.p1+len(part2):]
         new_ind = sec3+sec2+sec1
         return new_ind
 
-ind1 = [[1,2],[3,4],[5,6],[6,7],[2,2],[2,4],[2,6],[8,2],[1,8],[8,9]]
-ind2 = [[5,2],[4,5],[3,6],[2,7],[8,2],[1,4],[3,6],[2,3],[4,4],[9,9]]
+ind1 = list()
+ind2 = list()
+for i in range(0,20,1):
+        cond = True
+        while(cond):
+            ran = randint(0,20)
+            if(ran not in ind1):cond = False
+        ind1.append(ran)
+
+for i in range(0,20,1):
+        cond = True
+        while(cond):
+            ran = randint(0,20)
+            if(ran not in ind2):cond = False
+        ind2.append(ran)
+
+print(ind1)
+print(ind2)
 genetic = Genetic_algorithm(4,7)
 new_ind1 = genetic.order_crossing(ind1,ind2)
 new_ind2 = genetic.order_crossing(ind2,ind1)
