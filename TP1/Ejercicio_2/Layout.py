@@ -18,7 +18,10 @@ class Layout:
         for i in range(int((cols-1)/3 + 1)):
             self.y.append(county)
             county+=3
-        print(self.x,self.y)
+        self.create_map()
+        self.create_halls()
+        self.create_shelves()
+        # print(self.x,self.y)
 
     def create_map(self):
         return self.layout
