@@ -4,23 +4,28 @@ import random
 
 if __name__ == "__main__":
     m_type = 5      # cantidad de tipos de maquina
-    max_duration = 10
-    task_quantity = 20
+    max_duration = 10   # tiempo maximo de duracion de tarea
+    task_quantity = 20  # cantidad de tareas a realizar
     tasks = []
     machines = []
-    schedule = []
     domain = []
-    for i in range(1, m_type+1):
-        for j in range(1, task_quantity+1):
-            domain.append((i, j))
+    duration = []
+    total_time = 0
 
+    for i in range(task_quantity):
+        duration.append(random.randrange(1, max_duration, 1))
+        total_time += duration[i]
+
+    for i in range(1, m_type+1):
+        for j in range(1, total_time+1):
+            domain.append((i, j))
 
     for i in range(1, m_type+1):
         my_machine = machine.Machine("idm_"+str(i),random.randrange(1, m_type, 1))
         machines.append(my_machine)
 
     for i in range(1, task_quantity+1):
-        my_task = task.Task("idt_"+str(i),random.randrange(1, max_duration, 1),random.randrange(1, m_type, 1), domain)
+        my_task = task.Task("idt_"+str(i),duration[i-1],random.randrange(1, m_type, 1), domain)
         tasks.append(my_task)
         # print(tasks[i].ide)
 
