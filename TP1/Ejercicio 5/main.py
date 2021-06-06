@@ -34,15 +34,19 @@ if __name__ == "__main__":
 
     print(tasks[0].domain)
     print(tasks[0].type)
-    print(len(tasks))
-    counter = 0
     for i in range(len(tasks)):
+        print("identificador de tarea", tasks[i].ide)
         for j in range(len(tasks[i].domain)):
             if j<len(tasks[i].domain):
-                print(counter)
+                print(tasks[i].domain[j])
                 if (tasks[i].domain[j][0] != tasks[i].type):
-                    counter += 1
-                    print(counter)
+                    #print("i y j", i, j)
+                    print(tasks[i].domain[j][0])
+                    print("****", tasks[i].type)
                     tasks[i].domain.remove(tasks[i].domain[j])
-    
+    print(tasks[0].domain)
                     
+# ver que la subrutina empieza eliminando bien los valores que no corresponden,
+# pero luego deja de borrar tuplas hasta q se queda sin tareas. 
+# if j<len(tasks[i].domain): ese if tiene como objetivo verificar que no se 
+# produzca un index error por superar los limites de la lista.
