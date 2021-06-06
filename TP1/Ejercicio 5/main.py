@@ -5,7 +5,13 @@ import random
 if __name__ == "__main__":
     m_type = 5      # cantidad de tipos de maquina
     max_duration = 10   # tiempo maximo de duracion de tarea
-    task_quantity = 20  # cantidad de tareas a realizar
+    task_quantity = 40  # cantidad de tareas a realizar
+    my_machines = [1,1,1,2,2,3,4,4,5]
+    n1 = 3
+    n2 = 2
+    n3 = 1
+    n4 = 2
+    n5 = 1
     tasks = []
     machines = []
     domain = []
@@ -15,6 +21,9 @@ if __name__ == "__main__":
     for i in range(task_quantity):
         duration.append(random.randrange(1, max_duration, 1))
         total_time += duration[i]
+
+    # sumando el tiempo total de duracion de las tareas, definimos el dominio formando tuplas 
+    # con los tipos de maquinas disponibles y turnos de trabajo, segun el tiempo total de trabajo.
 
     for i in range(1, m_type+1):
         for j in range(1, total_time+1):
@@ -65,8 +74,3 @@ if __name__ == "__main__":
         print(f'\n\nDominio tarea task {tas.ide} de tipo {tas.type}\n')
         print(f'Tamaño del dominio: {len(tas.domain)}')
         print( tas.domain)
-
-# ver que la subrutina empieza eliminando bien los valores que no corresponden,
-# pero luego deja de borrar tuplas hasta q se queda sin tareas. 
-# if j<len(tasks[i].domain): ese if tiene como objetivo verificar que no se 
-# produzca un index error por superar los limites de la lista.
