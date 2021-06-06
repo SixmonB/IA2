@@ -2,6 +2,20 @@ import machine
 import task
 import random
 
+def info_maquinas(maquinas):
+    dic  = dict()
+    for mac in maquinas:
+        if mac.typ not in dic:
+            dic[mac.typ] = 1
+        else: 
+            dic[mac.typ] += 1
+
+    return dic
+
+
+
+
+
 if __name__ == "__main__":
     m_type = 5      # cantidad de tipos de maquina
     max_duration = 10   # tiempo maximo de duracion de tarea
