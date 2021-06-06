@@ -3,4 +3,4 @@ class Task(object):
         self.ide = ide
         self.type = type
         self.duration = duration
-        self.domain = domain
+        self.domain = domain.copy()
