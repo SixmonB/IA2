@@ -34,18 +34,33 @@ if __name__ == "__main__":
 
     print(tasks[0].domain)
     print(tasks[0].type)
-    for i in range(len(tasks)):
-        print("identificador de tarea", tasks[i].ide)
-        for j in range(len(tasks[i].domain)):
-            if j<len(tasks[i].domain):
-                print(tasks[i].domain[j])
-                if (tasks[i].domain[j][0] != tasks[i].type):
+    
+    for tarea in tasks:
+        delete = list()
+        print("identificador de tarea", tarea.ide)
+        for j in range(len(tarea.domain)):
+            
+            if j<len(tarea.domain):
+            
+                print(tarea.domain[j])            
+                if (tarea.domain[j][0] != tarea.type):
                     #print("i y j", i, j)
-                    print(tasks[i].domain[j][0])
-                    print("****", tasks[i].type)
-                    tasks[i].domain.remove(tasks[i].domain[j])
-    print(tasks[0].domain)
-                    
+                    print(tarea.domain[j][0])
+                    print("****", tarea.type)
+                    delete.append(tarea.domain[j])
+                    # tarea.domain.remove(tarea.domain[j])
+
+        for x in delete: tarea.domain.remove(x)
+    # print(tasks[0].domain)
+
+
+    input('ENTER para ver dominio de cada tarea')
+
+    for tas in tasks:
+        print(f'\n\nDominio tarea task {tas.ide} de tipo {tas.type}\n')
+        print(f'Tamaño del dominio: {len(tas.domain)}')
+        print( tas.domain)
+
 # ver que la subrutina empieza eliminando bien los valores que no corresponden,
 # pero luego deja de borrar tuplas hasta q se queda sin tareas. 
 # if j<len(tasks[i].domain): ese if tiene como objetivo verificar que no se 
