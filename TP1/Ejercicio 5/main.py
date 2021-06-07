@@ -3,6 +3,8 @@ import task
 import random
 import restricciones
 
+
+
 if __name__ == "__main__":
     m_type = 5      # cantidad de tipos de maquina
     max_duration = 10   # tiempo maximo de duracion de tarea
@@ -25,9 +27,11 @@ if __name__ == "__main__":
         for j in range(total_time):
             domain.append((i, j))
 
+    for i in range(1,len(my_machines)+1):
+        machines.append(machine.Machine( "idm_" + str(i), my_machines[i-1] ))
+
     for i in range(1, task_quantity+1):
-        my_task = task.Task("idt_"+str(i),duration[i-1],random.randrange(1, m_type, 1), domain)
-        tasks.append(my_task)
+        tasks.append(task.Task("idt_"+str(i),duration[i-1],random.randrange(1, m_type, 1), domain))
         # print(tasks[i].ide)
 
     
@@ -62,7 +66,32 @@ if __name__ == "__main__":
     # for tas in tasks:
     #     print(f'\n\nDominio tarea task {tas.ide} de tipo {tas.tipo}\n')
     #     print(f'Tamaño del dominio: {len(tas.domain)}')
-    #     print( tas.domain)
+    #     print( tas.domain)}   
+    
+    index = 0
+    csp =  CSP(machines, tasks)
+    def my_recursive(index):
+        
+        csp.podar_arbol(tasks[index])
+        
+        if len(csp.dominio_tarea) != 0:
+            csp.Asignar_turno(tasks[index])
+            if index < len(tasks)-1:
+                return my_recursive(index+1)
+            else : return True
+        elif len(csp.dominio_tarea) == 0:
+            return csp.backtracking(-1)
 
+        
+
+    
+    my_recursive(index)
+    print("Los turnos son", csp.shifts)
+
+
+<<<<<<< HEAD
     csp = restricciones.CSP(my_machines,tasks)
     
+=======
+            
+>>>>>>> 2907dae979340e2bf9ab7313865af40e1188679c
