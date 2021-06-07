@@ -10,7 +10,6 @@ class CSP(object):
         df = pd.DataFrame( columns =['Tarea', 'Maquina', 'Turno'], dtype=object)
 
         for tarea in tasks:
-            
             indx = 0
             for i in range( info_mach[ tarea.tipo ] ):
                 
@@ -40,5 +39,8 @@ class CSP(object):
                 dic[mac] += 1
 
         return dic
+
+    # def restrain(self):
+
 
     

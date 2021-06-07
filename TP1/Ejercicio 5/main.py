@@ -1,7 +1,7 @@
 import machine
 import task
 import random
-from restricciones import CSP
+import restricciones
 
 if __name__ == "__main__":
     m_type = 5      # cantidad de tipos de maquina
@@ -63,5 +63,5 @@ if __name__ == "__main__":
     #     print(f'Tamaño del dominio: {len(tas.domain)}')
     #     print( tas.domain)
 
-    csp = CSP(my_machines,tasks)
+    csp = restricciones.CSP(my_machines,tasks)
     
