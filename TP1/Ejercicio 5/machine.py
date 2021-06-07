@@ -1,4 +1,4 @@
-
+    
 class Machine(object):
     
     def __init__(self,ide,typ):
