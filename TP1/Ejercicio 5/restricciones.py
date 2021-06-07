@@ -26,15 +26,21 @@ class CSP(object):
                 df = df.append(df_temp, ignore_index= True)
         
         self.dominio_actual = df.copy()
-        
+        self.dominio_actual.to_csv('domio.csv', index=False , sep =';')
         del(df_temp)
         del(df)
 
         print(self.dominio_actual)
         self.bookkeeping = list(   )
 
+    def Asignar(self, task):
+        'para una tarea elige la menor  numero '
+        df_task = self.dominio_actual.query(f'Tarea == "{task.ide}"')
+        
+        pass
+
     def podar_arbol(self):
-        'Cada evz que realiza una asignacioneleimina del dominio actual aquellos registros (asignaciones) inconsistentes'
+        'Cada vez que realiza una asignacioneleimina del dominio actual aquellos registros (asignaciones) inconsistentes'
         pass
 
 
