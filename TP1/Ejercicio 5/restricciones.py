@@ -23,12 +23,19 @@ class CSP(object):
                 df_temp.drop('Tipo', inplace=True, axis=1)
                 
                 
-                df.append(df_temp)
-        print(df)            
-        self.dominio_actual = df.copy
+                df = df.append(df_temp, ignore_index= True)
+        
+        self.dominio_actual = df.copy()
+        
+        del(df_temp)
+        del(df)
+
         print(self.dominio_actual)
         self.bookkeeping = list(   )
 
+    def podar_arbol(self):
+        'Cada evz que realiza una asignacioneleimina del dominio actual aquellos registros (asignaciones) inconsistentes'
+        pass
 
 
     def info_machines(self,machines):
