@@ -56,10 +56,11 @@ if __name__ == "__main__":
     # print(tasks[0].domain)
 
 
+
     # input('ENTER para ver dominio de cada tarea')
 
     # for tas in tasks:
-    #     print(f'\n\nDominio tarea task {tas.ide} de tipo {tas.type}\n')
+    #     print(f'\n\nDominio tarea task {tas.ide} de tipo {tas.tipo}\n')
     #     print(f'Tamaño del dominio: {len(tas.domain)}')
     #     print( tas.domain)
 
