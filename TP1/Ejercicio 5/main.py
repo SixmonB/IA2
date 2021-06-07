@@ -86,12 +86,4 @@ if __name__ == "__main__":
 
     
     my_recursive(index)
-    print("Los turnos son", csp.shifts)
-
-
-<<<<<<< HEAD
-    csp = restricciones.CSP(my_machines,tasks)
-    
-=======
-            
->>>>>>> 2907dae979340e2bf9ab7313865af40e1188679c
+    print("Los turnos son", csp.shifts) 
