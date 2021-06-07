@@ -80,7 +80,7 @@ if __name__ == "__main__":
                 return my_recursive(index+1)
             else : return True
         elif len(csp.dominio_tarea) == 0:
-            return csp.backtracking(-1)
+            index = csp.backtracking(index)
 
         
 

@@ -6,7 +6,8 @@ class CSP(object):
                 
         info_mach = self.info_machines(machines)
         self.shifts = pd.DataFrame( columns = ['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype = object)
-        
+        self.backup_tarea = []
+        self.backup_maquinas = []
         df = pd.DataFrame( columns =['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype=object)
 
         for tarea in tasks:
@@ -59,18 +60,20 @@ class CSP(object):
 
 
     def Propagar_restricciones(self, task):
-        'Propaga las resticciones de la asignacion anterior al resto del dominio'
+        'Propaga las restricciones de la asignacion anterior al resto del dominio'
         
         eleccion = self.shifts.iloc[-1] # ultima asignacion
 
-        # elimina toos los registros de tarea del doinio
-        borrar = list(  self.dominio_actual[ self.dominio_actual['Tarea'] == task.ide ].index)
-        self.dominio_actual.drop( borrar , inplace = True) 
-
+        # elimina toos los registros de tarea del dominio
+        borrar_tarea = list(  self.dominio_actual[ self.dominio_actual['Tarea'] == task.ide ].index)
+        self.dominio_actual.drop( borrar_tarea , inplace = True) 
+        self.backup_tarea.append(borrar_tarea)
         # Borrar maquina del dominio de todas las tareas en momento donde esta ocupada         
-        borrar = list( self.dominio_actual.query( f'Maquina == "{eleccion.Maquina}" & Turno >= {eleccion.Turno}  & Turno <= {eleccion.Turno + task.duration}').index)
-        self.dominio_actual.drop(borrar, axis = 0, inplace=  True)
-        del(borrar)
+        borrar_maquina = list( self.dominio_actual.query( f'Maquina == "{eleccion.Maquina}" & Turno >= {eleccion.Turno}  & Turno <= {eleccion.Turno + task.duration}').index)
+        self.dominio_actual.drop(borrar_maquina, axis = 0, inplace=  True)
+        self.backup_maquinas.append(borrar_maquina)
+        del(borrar_maquina)
+        del(borrar_tarea)
         del(eleccion)
 
 
@@ -79,9 +82,17 @@ class CSP(object):
         self.Propagar_restricciones(task)
         
 
-    def backtracking(self):
-
-        pass
+    def backtracking(self, index):
+        self.dominio_actual = self.dominio_actual.concat(self.backup_maquinas[index])
+        self.dominio_actual = self.dominio_actual.concat(self.backup_tarea[index])
+        # Agregar rutina de cambio de eleccion de variable
+        # Verificar subfuncion if, la idea es q se produzca la recursividad hasta que haya dominio suficiente
+        # como para cambiar de eleccion.
+        if self.dominio_actual ==  1:
+            return self.backtracking(self, index-1)
+        return index # retornamos el indice para indicarle a la funcion principal desde donde continuar
+        # la recursividad.
+        
 
         
     def info_machines(self,machines):
