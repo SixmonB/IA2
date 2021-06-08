@@ -1,13 +1,12 @@
 import pandas as pd
+from pandas.core.accessor import DirNamesMixin
 
 class CSP(object):
 
     def __init__(self, machines,tasks) -> None:
                 
         info_mach = self.info_machines(machines)
-        self.shifts = pd.DataFrame( columns = ['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype = object)
-        self.backup_tarea = []
-        self.backup_maquinas = []
+        self.shifts = pd.DataFrame( columns = ['Tarea', 'Maquina', 'Tipo', 'Turno', 'Duracion'], dtype = object)
         df = pd.DataFrame( columns =['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype=object)
 
         for tarea in tasks:
@@ -46,7 +45,8 @@ class CSP(object):
         del(df)
 
         print(self.dominio_actual)
-        self.bookkeeping = list(   )
+        self.backup = list()
+        self.backup.append(self.dominio_actual)
 
  
     def podar_arbol(self, task):
@@ -65,33 +65,33 @@ class CSP(object):
         eleccion = self.shifts.iloc[-1] # ultima asignacion
 
         # elimina toos los registros de tarea del dominio
-        borrar_tarea = list(  self.dominio_actual[ self.dominio_actual['Tarea'] == task.ide ].index)
-        self.dominio_actual.drop( borrar_tarea , inplace = True) 
-        self.backup_tarea.append(borrar_tarea)
+        borrar = list(  self.dominio_actual[ self.dominio_actual['Tarea'] == task.ide ].index)
+        self.dominio_actual.drop( borrar , inplace = True) 
         # Borrar maquina del dominio de todas las tareas en momento donde esta ocupada         
-        borrar_maquina = list( self.dominio_actual.query( f'Maquina == "{eleccion.Maquina}" & Turno >= {eleccion.Turno}  & Turno <= {eleccion.Turno + task.duration}').index)
-        self.dominio_actual.drop(borrar_maquina, axis = 0, inplace=  True)
-        self.backup_maquinas.append(borrar_maquina)
-        del(borrar_maquina)
-        del(borrar_tarea)
+        borrar = list( self.dominio_actual.query( f'Maquina == "{eleccion.Maquina}" & Turno >= {eleccion.Turno}  & Turno <= {eleccion.Turno + task.duration}').index)
+        self.dominio_actual.drop(borrar, axis = 0, inplace=  True)
+        # guardamos el estado del dominio para mantener un registro para el backtracking
+        # guardamos la ultima eleccion para eliminarla del dominio luego del backtracking
+        self.backup.append(self.dominio_actual)
+        self.last_election = eleccion
+        del(borrar)
         del(eleccion)
 
 
     def Asignar_turno(self,task):
         self.shifts = self.shifts.append(self.dominio_tarea.iloc[0])
+        row_labels = self.shifts.index.values
+        self.shifts.at[row_labels[-1], 'Duracion'] = task.duration
         self.Propagar_restricciones(task)
         
 
     def backtracking(self, index):
-        self.dominio_actual = self.dominio_actual.concat(self.backup_maquinas[index])
-        self.dominio_actual = self.dominio_actual.concat(self.backup_tarea[index])
-        # Agregar rutina de cambio de eleccion de variable
-        # Verificar subfuncion if, la idea es q se produzca la recursividad hasta que haya dominio suficiente
-        # como para cambiar de eleccion.
-        if self.dominio_actual ==  1:
-            return self.backtracking(self, index-1)
-        return index # retornamos el indice para indicarle a la funcion principal desde donde continuar
-        # la recursividad.
+        # tomamos el backup de dominios del sistema, eliminamos el ultimo caso, y volvemos al caso anterior
+        # tambien eliminamos del dominio a la ultima eleccion para no volver a caer en el mismo error
+        self.backup.pop()
+        self.dominio_actual = self.backup[-1]
+        self.dominio_actual.drop(self.last_election, inplace =True)
+        self.shifts = self.shifts.drop(self.shifts.tail(1).index, inplace = True)
         
 
         

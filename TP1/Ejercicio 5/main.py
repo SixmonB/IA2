@@ -1,7 +1,7 @@
 import machine
 import task
 import random
-import restricciones
+from restricciones import CSP
 
 
 
@@ -70,8 +70,8 @@ if __name__ == "__main__":
     
     index = 0
     csp =  CSP(machines, tasks)
+
     def my_recursive(index):
-        
         csp.podar_arbol(tasks[index])
         
         if len(csp.dominio_tarea) != 0:
@@ -80,10 +80,10 @@ if __name__ == "__main__":
                 return my_recursive(index+1)
             else : return True
         elif len(csp.dominio_tarea) == 0:
-            index = csp.backtracking(index)
-
+            csp.backtracking(index)
+            return my_recursive(index-1)
         
 
     
     my_recursive(index)
-    print("Los turnos son", csp.shifts) 
+    print("Los turnos son\n", csp.shifts) 
