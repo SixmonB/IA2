@@ -166,7 +166,7 @@ class Temple_Simulado():
         
 def normalizar(array):
     # array = (abs(array).max()-array)/(abs(array).max()  - abs(array).min())
-    array = (array + abs(array).min())/(abs(array).max()  + abs(array).min())
+    array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
 
     return array
 
