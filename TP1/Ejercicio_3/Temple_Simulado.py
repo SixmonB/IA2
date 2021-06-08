@@ -185,48 +185,56 @@ def str_orden(orden):
 if __name__ == '__main__':
     
     
-    cols = 14
-    rows = 16
+    cols = 13
+    rows = 13
     almacen = Layout(rows,cols) 
-    q_picks = 4
-    q_ordenes = 10
+    
+    
+    
     memoria = Cache()
     graficos_evolucion = list()
 
-    for j in range(q_ordenes):
-       
-       
-        #generar orden 
-        orden = list()
-        for i in range(q_picks):
-            n = randint(0, len(almacen.halls)-1)
-            a = almacen.halls[n]
-            orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
-        # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+    q_experiment = 10
 
+    for ex in range(q_experiment):
 
-        print(str_orden(orden) )
-                
-        temple = Temple_Simulado(orden,almacen)
-        temple.Iniciar_Busqueda_Local()
-        # n_iteracion = np.array(temple.evolucion_costo[0])
-        # n_iteracion = np.arange(0,len(temple.evolucion_costo))
-        n_iteracion = normalizar ( np.array(temple.eje_x) )
-        
-
-        calidad = normalizar( np.array(temple.evolucion_costo) )
-        # graficos_evolucion.append((n_iteracion,calidad))
-        graf  = plt.plot(n_iteracion,calidad)
-        print(temple.causa)
-        print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
-        print('El costo: ', temple.costo_actual)
-        print('Cantidad de iteraciones: ', temple.it)
-        print('\n')
-        plt.show()
-
+        q_picks = randint(2,10)  # cantidad de pedidos por orden
+        q_ordenes =  randint(20,50) #Cantidad de oprdenes por experimento       20
 
     
-    # plt.show()
+        for j in range(q_ordenes):
+            
+            
+
+            #generar orden 
+            orden = list()
+            for i in range(q_picks):
+                n = randint(0, len(almacen.halls)-1)
+                a = almacen.halls[n]
+                orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+            # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+
+
+            print(str_orden(orden) )
+                    
+            temple = Temple_Simulado(orden,almacen)
+            temple.Iniciar_Busqueda_Local()
+            # n_iteracion = np.array(temple.evolucion_costo[0])
+            # n_iteracion = np.arange(0,len(temple.evolucion_costo))
+            n_iteracion = normalizar ( np.array(temple.eje_x) )
+            
+
+            calidad = normalizar( np.array(temple.evolucion_costo) )
+            # graficos_evolucion.append((n_iteracion,calidad))
+            graf  = plt.plot(n_iteracion,calidad)
+            print(temple.causa)
+            print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
+            print('El costo: ', temple.costo_actual)
+            print('Cantidad de iteraciones: ', temple.it)
+            print('\n')
+            # plt.show()
+        memoria.Guardar_Memoria()
+        plt.show()
 
     # for i in temple.evolucion_costo:
     #     print(i)

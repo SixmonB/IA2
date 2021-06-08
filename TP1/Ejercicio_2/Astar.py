@@ -111,7 +111,7 @@ class Astar:
             node = new_node
             par = node.parent
             new_way.append(node.value)
-            mapm[node.value[0],node.value[1]]=1
+            mapm[node.value[0],node.value[1]]=1   # problema de indexacion, supuestamente el mapa es de 0 a 12 y aca esta indexando un 13
             if(node.parent == None):
                 cond = False
             new_node = par

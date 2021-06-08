@@ -2,7 +2,7 @@ import numpy as np
 
 class Layout:
     def __init__(self,rows,cols):
-        self.layout = np.zeros((rows,cols))
+        self.layout = np.zeros((rows+1,cols+1)) # veri si con mas uno se pasa el problema de indexacion
         self.halls = []
         self.shelves = []
         self.cols = cols
