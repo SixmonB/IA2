@@ -20,7 +20,6 @@ class Individual:
         self.number = number
         self.avrg = 0
         
-    
     def generate(self,prod_quant):
         'Genera el genoma o modelo del individuo'
         for i in range(0,self.model_size+1,1):
@@ -39,11 +38,12 @@ class Individual:
     
     def assign_shelves_to_orders(self,all_orders,shelves):
         aux_list = []
-        for i in all_orders:
-            for j in i.content: 
-                ind = self.model.index(j)
-                aux_list.append(shelves[ind])
-            self.orders_by_shelves.append(aux_list)
+        for i in all_orders: #i es un objeto de la clase orden
+            for j in i.content: #i.content es una lista justamente, atributo del objeto i. por ejemplo (P10,P11,P5,P8,etc)
+                ind = self.model.index(j) #Analizo dentro de mi individuo, donde se encuetra el producto j
+                aux_list.append(shelves[ind]) #Ese producto, esta asociado a un lugar dentro de las estanterias. Como yo quiero obtener una lista de ordenes parcial en forma de puntos dentro del
+                #almacén y no de productos (para ejecutar el temple simulado), genero esta lista.
+            self.orders_by_shelves.append(aux_list) 
             aux_list = []
     
     def optimize_orders(self,store,memoria):

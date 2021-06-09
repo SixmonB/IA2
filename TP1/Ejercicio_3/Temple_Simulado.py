@@ -30,7 +30,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 20
+        self.T_INICIAL = 30
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -48,6 +48,7 @@ class Temple_Simulado():
         "Calcula el costo de una orden incluytendo punto de partida "
         #global memoria
         costo =  int()
+        self.costo_estado_actual = 0
         
         for i,point in enumerate(estado):
             
@@ -58,6 +59,8 @@ class Temple_Simulado():
             elif i == len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen,memoria)
             
             else: costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria)
+        
+        self.costo_estado_actual = costo
         return costo
     
     def Generar_Vecino(self):
@@ -107,10 +110,8 @@ class Temple_Simulado():
         costo_actual = self.Calcular_Costo(self.estado_actual)
 
         costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
-        self.costo_total = self.costo_total + costo_actual + costo_siguiente
+        #self.costo_total = self.costo_total + costo_actual + costo_siguiente
         self.ENERGIA = -(costo_siguiente - costo_actual)
-
-        
 
 
     def Iniciar_Busqueda_Local(self):
@@ -159,7 +160,7 @@ class Temple_Simulado():
             if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
-            if self.it == it_max   :
+            if self.it == it_max :
                 self.causa = f'Iteraciones agotadas {self.it}'
                 break
         
@@ -176,7 +177,8 @@ def Ejecutar_temple(almacen,orden,memo):
     temple.Iniciar_Busqueda_Local()
 
     #memoria.Disconect_db()
-    return temple.estado_actual,temple.costo_total
+    costo_estado_actual = temple.Calcular_Costo(temple.estado_actual)
+    return temple.estado_actual,costo_estado_actual
 
 if __name__ == '__main__':
     cols = 19
