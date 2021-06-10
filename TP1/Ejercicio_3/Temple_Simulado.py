@@ -117,7 +117,7 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        self.it_max = 30
+        # self.it_max = 30
         
         terminado = False
         convergencia = False
@@ -247,7 +247,7 @@ if __name__ == '__main__':
                 n = randint(0, len(almacen.shelves)-1)
                 a = almacen.shelves[n]
                 orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
-            # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+            
 
 
             # print(str_orden(orden) )
