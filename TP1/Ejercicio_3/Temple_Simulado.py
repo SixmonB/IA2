@@ -96,7 +96,7 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA*1000/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*1/self.TEMPERATURA) *1000)
         azar = randint(0,1000)
         
         if azar <= self.umbral_probabilidad: return True
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     pick_max = len(almacen.shelves)
     ord_max = 100
     
-    
+    t_inicial = 500
     memoria = Cache()
     graficos_evolucion = list()
 
@@ -253,7 +253,7 @@ if __name__ == '__main__':
             # print(str_orden(orden) )
             
                     
-            temple = Temple_Simulado(orden,almacen,2000)
+            temple = Temple_Simulado(orden,almacen,t_inicial)
             temple.Iniciar_Busqueda_Local()
             # n_iteracion = np.array(temple.evolucion_costo[0])
             # n_iteracion = np.arange(0,len(temple.evolucion_costo))
