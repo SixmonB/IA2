@@ -21,7 +21,7 @@ from random import randint
 from math import exp
 
 class Temple_Simulado():
-    def __init__(self, orden, mapa) -> None:
+    def __init__(self, orden, mapa,t_inicial) -> None:
         self.costo_total = int()
         self.almacen = mapa
         self.punto_inicio = Punto(4,4)
@@ -30,7 +30,8 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 1000
+        self.T_INICIAL = t_inicial
+        self.it_max = t_inicial
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -116,13 +117,13 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max = 2000
+        self.it_max = 30
         
         terminado = False
         convergencia = False
         it_converg = 0
         it_converg_max = 200
-        while not terminado and not convergencia and self.it < it_max:
+        while not terminado and not convergencia and self.it < self.it_max:
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
@@ -166,7 +167,7 @@ class Temple_Simulado():
             if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
-            if self.it == it_max   :
+            if self.it == self.it_max   :
                 self.causa = f'Iteraciones agotadas {self.it}'
                 break
             # it_converg += 1
@@ -252,7 +253,7 @@ if __name__ == '__main__':
             # print(str_orden(orden) )
             
                     
-            temple = Temple_Simulado(orden,almacen)
+            temple = Temple_Simulado(orden,almacen,2000)
             temple.Iniciar_Busqueda_Local()
             # n_iteracion = np.array(temple.evolucion_costo[0])
             # n_iteracion = np.arange(0,len(temple.evolucion_costo))
