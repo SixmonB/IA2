@@ -85,7 +85,7 @@ class CSP(object):
         self.Propagar_restricciones(task)
         
 
-    def backtracking(self, index):
+    def backtracking(self):
         # tomamos el backup de dominios del sistema, eliminamos el ultimo caso, y volvemos al caso anterior
         # tambien eliminamos del dominio a la ultima eleccion para no volver a caer en el mismo error
         self.backup.pop()
