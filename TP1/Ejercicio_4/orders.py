@@ -1,4 +1,8 @@
 import os
+here = os.path.dirname(__file__)
+filename = "orders.txt"
+filepath = os.path.join(here, filename)
+linestring = open(filepath).read()
 
 class Orders:
     def __init__(self,number):
@@ -9,11 +13,11 @@ class Orders:
 
     def read_file(self):
         'Lee el archivo y rellena una lista que contiene los productos de la orden corrspondiente'
-        #current_dir = os.getcwd()
+        current_dir = os.path.abspath(__file__)
+        current_dir = current_dir.rstrip('\orders.py')
         #print(current_dir)
-        #root = current_dir+'/orders.txt'
-        self.f = open('C:/Users/merem/Documents/MATERIAS/5to/IA2/Repos/IA2/TP1/Ejercicio_4/orders.txt','r')
-        #self.f = open(root,"r")
+        #self.f = open('C:/Users/merem/Documents/MATERIAS/5to/IA2/Repos/IA2/TP1/Ejercicio_4/orders.txt','r')
+        self.f = open(current_dir+'\orders.txt','r')
         file = self.f.readlines()
         flag = 0
         for i in file:

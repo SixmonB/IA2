@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #Hiperparámetros
     indiv_quant = 20 #Cantidad de individuos a generar
     historal_orders = 100 #Cantidad de ordenes historicas a considerar
-    it = 30 #Cantidad de iteraciones
+    it = 10 #Cantidad de iteraciones
 
     #Lectura de las ordenes del archivo .txt y las almacenamos en la lista all_orders
     all_orders = list()
@@ -45,9 +45,9 @@ if __name__ == "__main__":
     
     memoria = Cache()
     n_it = 0
-    costos_two_gens = []
-    indivs_two_gens = []
-    best_20_indivs = []
+    aux_avrgs = []
+    partial_avrgs = []
+    reorder_indivs = []
     for k in range(0,it):
         print("Iteracion numero: ",k)
         #Asignamos a cada producto dentro del modelo del individuo un lugar fijo en las estanerías
@@ -63,11 +63,25 @@ if __name__ == "__main__":
             n_it+=1
             n_iteracion.append(n_it)
             costos.append(i.avrg)
-            costos_two_gens.append(i.avrg)
-            indivs_two_gens.append(i)
+            aux_avrgs.append(i.avrg)
             results[i.avrg] = i.model
         
-        #Crossover 
+        #for i in aux_avrg:
+        #    partial_avrg.append(i/(sum(aux_avrg)))
+        
+        #Reordenamos los promedios de costos de menor a mayor (menor costo mejor que mayor costo)
+        partial_avrgs = sorted(aux_avrgs)
+        print(len(all_individuals))
+        for i in partial_avrgs:
+            for j in all_individuals:
+                if(j.avrg == i and (j not in reorder_indivs)):
+                    reorder_indivs.append(j)
+        
+        print(len(reorder_indivs))
+        all_individuals = []
+        all_individuals = reorder_indivs
+
+        #-------------Crossover------------------- 
         #1-Creamos puntos de cruce
         while(True):
             crossing_point1 = randint(1,indiv_size-1) 
@@ -88,11 +102,14 @@ if __name__ == "__main__":
             new_individuals[i+1].model = aux_2
             aux_1 = aux_2 = []
         
+        print(len(new_individuals))
         #Seleccion de los mejores individuos de la generacion anterior y la actual
         all_individuals = []
+        reorder_indivs = []
+        partial_avrgs = []
+        aux_avrgs = []
         all_individuals = new_individuals
         
-    
     costs = sorted(costos)
     print("Costos totales promedio: ",costs)
     print("Costo promedio de mejor individuo: ",costs[0])

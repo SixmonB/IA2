@@ -53,11 +53,11 @@ def Short_Way(init, goal, layout):
     return astar
 
 if __name__ == "__main__":
-    cols = 18
-    rows = 18
+    cols = 19
+    rows = 21
     layout = Layout(rows,cols)    
-    init = [1,0]
-    goal = [10,1]
+    init = [2,2]
+    goal = [17,17]
     short = Short_Way(init,goal,layout)
     print("Camino mas corto: ",short.shortest_way)
     print("Costo del camino: ",short.way_distance)
