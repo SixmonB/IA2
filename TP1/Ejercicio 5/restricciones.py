@@ -14,7 +14,7 @@ class CSP(object):
             indx = 0
             for mac in machines:
                 
-                # si la maquina y la tarea son del mismo tipo 
+                # agregando todas las combinaciones al dominio
                 for time in range(total_time):
                     # if mac.typ == tarea.tipo:
                     dominio.append( (tarea.ide, mac.ide, mac.typ ,time) )
