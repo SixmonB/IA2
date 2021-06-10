@@ -5,6 +5,7 @@ package_root_directory = file.parents [1]
 sys.path.append(str(package_root_directory))
 
 from Ejercicio_2.ej_02 import * 
+from Ejercicio_3.cache import *
 
 class Punto():
     def __init__(self,x,y) -> None:

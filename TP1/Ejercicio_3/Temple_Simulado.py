@@ -1,4 +1,3 @@
-
 import math
 import sys  
 from pathlib import Path
@@ -14,6 +13,7 @@ import numpy as np
 from Ejercicio_3.Punto import Punto  
 from Ejercicio_3.cache import *
 from Ejercicio_2.Layout import *
+from Ejercicio_4.orders import *
 
 
 from random import randint
@@ -23,13 +23,13 @@ class Temple_Simulado():
     def __init__(self, orden, mapa) -> None:
         self.costo_total = int()
         self.almacen = mapa
-        self.punto_inicio = Punto(4,4)
-        self.punto_fin = Punto(4,4)
+        self.punto_inicio = Punto(0,0)
+        self.punto_fin = Punto(0,0)
 
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 2000
+        self.T_INICIAL = 30
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -45,8 +45,9 @@ class Temple_Simulado():
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
-        global memoria
+        #global memoria
         costo =  int()
+        self.costo_estado_actual = 0
         
         for i,point in enumerate(estado):
             
@@ -57,6 +58,8 @@ class Temple_Simulado():
             elif i == len(estado)-1: costo += point.Distancia_Minima(self.punto_fin,self.almacen,memoria)
             
             else: costo += point.Distancia_Minima(estado[i+1],self.almacen,memoria)
+        
+        self.costo_estado_actual = costo
         return costo
     
     def Generar_Vecino(self):
@@ -71,7 +74,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo = 4):
+    def Funcion_Decrecimiento(self , modo =4):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -108,17 +111,16 @@ class Temple_Simulado():
         '''La energia es negativa cuando el siguiente es peor que el actual.
             pero en nuetro caso el mejor es el mas corto. por tanto multiplicamos por (-1) para indicar Energia negativa      
          '''
-        self.costo_actual = self.Calcular_Costo(self.estado_actual)
+        costo_actual = self.Calcular_Costo(self.estado_actual)
 
-        self.costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
-        self.ENERGIA = -(self.costo_siguiente - self.costo_actual)
-
-        
+        costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
+        #self.costo_total = self.costo_total + costo_actual + costo_siguiente
+        self.ENERGIA = -(costo_siguiente - costo_actual)
 
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max = 2000
+        it_max = 1000
         
         terminado = False
         convergencia = False
@@ -128,7 +130,6 @@ class Temple_Simulado():
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
-            
             # print(self.TEMPERATURA)
             if self.TEMPERATURA <= 0   :
                 self.causa = f'Iteraciones agotadas {self.it}'
@@ -146,13 +147,10 @@ class Temple_Simulado():
                     it_converg = 0
                 # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, SIN PROBABILIDAD' #,ESTADO ACTUAL: {self.estado_actual},                                            
                 self.estado_actual = self.estado_siguiente.copy()
-                self.costo_actual = self.costo_siguiente
             
             else:
                 # devolucion += f'COSTO ACTUAL: {self.Calcular_Costo(self.estado_actual)} ,COSTO SIGUIENTE: {self.Calcular_Costo(self.estado_siguiente)}, ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
-                if self.Calcular_probabilidad(): 
-                    self.estado_actual = self.estado_siguiente.copy()
-                    self.costo_actual = self.costo_siguiente
+                if self.Calcular_probabilidad(): self.estado_actual = self.estado_siguiente.copy()
                 
                 # devolucion += f'COSTO: {self.Calcular_Costo(self.estado_actual)} , ENERGIA: {self.ENERGIA}, PROBABILIDAD: {self.umbral_probabilidad}'#ESTADO ACTUAL: {self.estado_actual},                                            
 
@@ -163,109 +161,63 @@ class Temple_Simulado():
             self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
 
             self.it += 1
-            
-            
             if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
-            if self.it == it_max   :
+            if self.it == it_max :
                 self.causa = f'Iteraciones agotadas {self.it}'
                 break
-            # it_converg += 1
-            # print(self.it)
         
-def normalizar(array, modo = 1):
-    #Normalizacion para las ietreaciones
-    if modo == 1:
-        # array = (abs(array).max()-array)/(abs(array).max()  - abs(array).min())
-        # array = abs(array).max() - array
-        array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
-        # array = 1 - array
-
-        # array = 1 - array
-    # Normalizacion para la calidad
-    if modo == 2:
-        array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
-        array = 1 - array
-
-
+def normalizar(array):
+    array = array/abs(array).max()   
     return array
 
-def str_orden(orden):
-    ord = str()
-    for i,pic in enumerate(orden) :
-        if i == len(orden)-1:
-            ord += str(pic)
-        else:
-            ord += str(pic)+','
-    return(ord)
+def Ejecutar_temple(almacen,orden,memo):
+    global memoria 
+    memoria = memo
+    #memoria.Conect_db()
 
+    temple = Temple_Simulado(orden,almacen)
+    temple.Iniciar_Busqueda_Local()
 
-
+    #memoria.Disconect_db()
+    costo_estado_actual = temple.Calcular_Costo(temple.estado_actual)
+    return temple.estado_actual,costo_estado_actual
 
 if __name__ == '__main__':
-    
-    
-    cols = 13
-    rows = 13
+    cols = 19
+    rows = 21
     almacen = Layout(rows,cols) 
-    pick_max = len(almacen.shelves)
-    ord_max = 150
-    
-    
+    q_picks = 25
+    q_ordenes = 30
+    global memoria
     memoria = Cache()
+    #memoria.Conect_db()
     graficos_evolucion = list()
+    print(len(almacen.halls))
+    for j in range(q_ordenes):
+       
+        #generar orden 
+        orden = list()
+        for i in range(q_picks):
+            n = randint(0, len(almacen.shelves)-1)
+            a = almacen.shelves[n]
+            orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
+        
+        for i,pic in enumerate(orden):
+            if i == len(orden)-1:
+                print(pic)
+            else:
+                print(pic,end=',')
+        temple = Temple_Simulado(orden,almacen)
+        temple.Iniciar_Busqueda_Local()
+        n_iteracion = normalizar ( np.array(temple.eje_x) )
+        
 
-    q_experiment = 10
-
-    for ex in range(q_experiment):
-
-        q_picks = randint(7,25 )  # cantidad de pedidos por orden
-        q_ordenes =  randint(30,ord_max ) #Cantidad de oprdenes por experimento       20
-        print('\n\n')
-        print ('='.center(40, "=")) 
-        print(f'EXPERIMENTO: {ex} ')
-        print(f'Cantidad de ordenes: {q_ordenes}')
-        print(f'Pedidos por orden: {q_picks}')
-        print ('='.center(40, "=")) 
-        print('\n\n')
-        for j in range(q_ordenes):
-            
-            
-
-            #generar orden 
-            orden = list()
-            for i in range(q_picks):
-                n = randint(0, len(almacen.shelves)-1)
-                a = almacen.shelves[n]
-                orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
-            # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
-
-
-            # print(str_orden(orden) )
-            
-                    
-            temple = Temple_Simulado(orden,almacen)
-            temple.Iniciar_Busqueda_Local()
-            # n_iteracion = np.array(temple.evolucion_costo[0])
-            # n_iteracion = np.arange(0,len(temple.evolucion_costo))
-            n_iteracion = normalizar ( np.array(temple.eje_x) )
-            
-
-            calidad = normalizar( np.array(temple.evolucion_costo),2 )
-            # graficos_evolucion.append((n_iteracion,calidad))
-            graf  = plt.plot(n_iteracion,calidad)
-            
-            
-            # print(temple.causa)
-            # print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
-            # print('El costo: ', temple.costo_actual)
-            # print('Cantidad de iteraciones: ', temple.it)
-            # print('\n')
-            # plt.show()
-        memoria.Guardar_Memoria()
-        plt.show()
-
-    # for i in temple.evolucion_costo:
-    #     print(i)
+        calidad = normalizar( np.array(temple.evolucion_costo) )
+        graficos_evolucion.append((n_iteracion,calidad))
+        graf  = plt.plot(n_iteracion,calidad)
+        print(temple.causa)
     
+    #memoria.Disconect_db()
+    plt.show()
