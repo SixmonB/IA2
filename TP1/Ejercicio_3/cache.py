@@ -41,7 +41,7 @@ class Cache():
     def Guardar_Memoria(self):
         
         df = pd.DataFrame(list(self.MEMO.items()),columns = ['Orden','Costo']) 
-        print(df)
+        
         # df.drop
         df.to_csv(self.path/'memo.csv', sep = ';', index = False)
 
@@ -49,7 +49,8 @@ class Cache():
 
     def Cargar_Memoria(self):
         if os.path.isfile(self.path/'memo.csv'):
-            df = pd.read_csv(self.path/'memo.csv', sep = ';').set_index('Orden').to_dict()
+            df = pd.read_csv(self.path/'memo.csv', sep = ';').set_index('Orden').to_dict()['Costo']
+            
             return df
             
             

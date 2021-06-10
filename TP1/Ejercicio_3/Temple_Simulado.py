@@ -29,7 +29,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 1000
+        self.T_INICIAL = 2000
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -71,7 +71,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo =3):
+    def Funcion_Decrecimiento(self , modo = 4):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -81,16 +81,23 @@ class Temple_Simulado():
         #cuadratico
         elif modo == 2:
             self.TEMPERATURA = self.T_INICIAL - self.it*2
+        
+        #Decreciemiento exponencial por 2
         elif modo == 3:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/2
+        
+        # decreciemiento exponencial por 4
+        elif modo == 4:
+            if self.it == 0: self.TEMPERATURA = self.T_INICIAL
+            self.TEMPERATURA = self.TEMPERATURA/4
         
     def Calcular_probabilidad(self):
         "Calcula la probabilidad y luego de manera aleatoria decide si fue positiva o negativa"
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*1000/self.TEMPERATURA) *1000)
         azar = randint(0,1000)
         
         if azar <= self.umbral_probabilidad: return True
@@ -111,7 +118,7 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max =1000
+        it_max = 2000
         
         terminado = False
         convergencia = False
@@ -121,6 +128,7 @@ class Temple_Simulado():
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
+            
             # print(self.TEMPERATURA)
             if self.TEMPERATURA <= 0   :
                 self.causa = f'Iteraciones agotadas {self.it}'
@@ -155,6 +163,8 @@ class Temple_Simulado():
             self.evolucion_costo.append(self.Calcular_Costo(self.estado_actual))
 
             self.it += 1
+            
+            
             if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
@@ -164,9 +174,20 @@ class Temple_Simulado():
             # it_converg += 1
             # print(self.it)
         
-def normalizar(array):
-    # array = (abs(array).max()-array)/(abs(array).max()  - abs(array).min())
-    array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
+def normalizar(array, modo = 1):
+    #Normalizacion para las ietreaciones
+    if modo == 1:
+        # array = (abs(array).max()-array)/(abs(array).max()  - abs(array).min())
+        # array = abs(array).max() - array
+        array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
+        # array = 1 - array
+
+        # array = 1 - array
+    # Normalizacion para la calidad
+    if modo == 2:
+        array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
+        array = 1 - array
+
 
     return array
 
@@ -188,7 +209,8 @@ if __name__ == '__main__':
     cols = 13
     rows = 13
     almacen = Layout(rows,cols) 
-    
+    pick_max = len(almacen.shelves)
+    ord_max = 150
     
     
     memoria = Cache()
@@ -198,10 +220,15 @@ if __name__ == '__main__':
 
     for ex in range(q_experiment):
 
-        q_picks = randint(2,10)  # cantidad de pedidos por orden
-        q_ordenes =  randint(20,50) #Cantidad de oprdenes por experimento       20
-
-    
+        q_picks = randint(7,25 )  # cantidad de pedidos por orden
+        q_ordenes =  randint(30,ord_max ) #Cantidad de oprdenes por experimento       20
+        print('\n\n')
+        print ('='.center(40, "=")) 
+        print(f'EXPERIMENTO: {ex} ')
+        print(f'Cantidad de ordenes: {q_ordenes}')
+        print(f'Pedidos por orden: {q_picks}')
+        print ('='.center(40, "=")) 
+        print('\n\n')
         for j in range(q_ordenes):
             
             
@@ -209,13 +236,14 @@ if __name__ == '__main__':
             #generar orden 
             orden = list()
             for i in range(q_picks):
-                n = randint(0, len(almacen.halls)-1)
-                a = almacen.halls[n]
-                orden.append(Punto(almacen.halls[n][0],almacen.halls[n][1]))
+                n = randint(0, len(almacen.shelves)-1)
+                a = almacen.shelves[n]
+                orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
             # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
 
 
-            print(str_orden(orden) )
+            # print(str_orden(orden) )
+            
                     
             temple = Temple_Simulado(orden,almacen)
             temple.Iniciar_Busqueda_Local()
@@ -224,14 +252,16 @@ if __name__ == '__main__':
             n_iteracion = normalizar ( np.array(temple.eje_x) )
             
 
-            calidad = normalizar( np.array(temple.evolucion_costo) )
+            calidad = normalizar( np.array(temple.evolucion_costo),2 )
             # graficos_evolucion.append((n_iteracion,calidad))
             graf  = plt.plot(n_iteracion,calidad)
-            print(temple.causa)
-            print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
-            print('El costo: ', temple.costo_actual)
-            print('Cantidad de iteraciones: ', temple.it)
-            print('\n')
+            
+            
+            # print(temple.causa)
+            # print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
+            # print('El costo: ', temple.costo_actual)
+            # print('Cantidad de iteraciones: ', temple.it)
+            # print('\n')
             # plt.show()
         memoria.Guardar_Memoria()
         plt.show()
