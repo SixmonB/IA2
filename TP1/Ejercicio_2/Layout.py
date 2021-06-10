@@ -21,7 +21,6 @@ class Layout:
         self.create_map()
         self.create_halls()
         self.create_shelves()
-        # print(self.x,self.y)
 
     def create_map(self):
         return self.layout
@@ -43,5 +42,8 @@ class Layout:
             for j in range(self.rows):
                 if(([j,i] in self.halls)==False):
                     self.shelves.append([j,i])
+        for i in self.shelves:
+            self.layout[i[0],i[1]] = 2
+        print(self.layout) 
         return self.shelves
 
