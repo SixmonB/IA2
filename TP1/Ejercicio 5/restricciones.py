@@ -16,8 +16,8 @@ class CSP(object):
                 
                 # si la maquina y la tarea son del mismo tipo 
                 for time in range(total_time):
-                    if mac.typ == tarea.tipo:
-                        dominio.append( (tarea.ide, mac.ide, tarea.tipo ,time) )
+                    # if mac.typ == tarea.tipo:
+                    dominio.append( (tarea.ide, mac.ide, mac.typ ,time) )
                    
                         
                         
