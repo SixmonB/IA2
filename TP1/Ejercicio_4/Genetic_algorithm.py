@@ -7,14 +7,14 @@ class Genetic_algorithm:
         self.p1 = p1
         self.p2 = p2
 
-    def Execute_genetic(self,all_costs):
-        self.calculate_fitness(all_costs)
+    #def Execute_genetic(self,all_costs):
+    #    self.calculate_fitness(all_costs)
 
-    def calculate_fitness(self,all_costs):
-        aux =  sum(all_costs)
-        probs = list()
-        for j in all_costs:
-            probs.append(j/aux)
+    #def calculate_fitness(self,all_costs):
+    #    aux =  sum(all_costs)
+    #    probs = list()
+    #    for j in all_costs:
+    #        probs.append(j/aux)
         
     def order_crossing(self,ind1,ind2):
         new_ind1 = []
