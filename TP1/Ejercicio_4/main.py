@@ -4,8 +4,8 @@ file = Path(__file__). resolve()
 package_root_directory = file.parents [1]  
 sys.path.append(str(package_root_directory))
 
-from orders import Orders
-from Individual import Individual
+from orders import *
+from Individual import *
 from Ejercicio_2.Layout import *
 from Ejercicio_3.Temple_Simulado import *
 from Ejercicio_3.Punto import *

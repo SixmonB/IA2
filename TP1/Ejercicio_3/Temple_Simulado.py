@@ -1,20 +1,20 @@
 import math
 import sys  
-from pathlib import Path
-
-from numpy.core.records import array  
+from pathlib import Path  
 file = Path(__file__). resolve()  
 package_root_directory = file.parents [1]  
 sys.path.append(str(package_root_directory))
 
-
+from Ejercicio_4.orders import Orders
+from Ejercicio_4.Individual import Individual
+from Ejercicio_2.Layout import *
+from Ejercicio_3.Temple_Simulado import *
+from Ejercicio_3.Punto import *
+from Ejercicio_3.cache import *
+from Ejercicio_4.Genetic_algorithm import *
+from random import randint
 import matplotlib.pyplot as plt
 import numpy as np
-from Ejercicio_3.Punto import Punto  
-from Ejercicio_3.cache import *
-from Ejercicio_2.Layout import *
-from Ejercicio_4.orders import *
-
 
 from random import randint
 from math import exp
