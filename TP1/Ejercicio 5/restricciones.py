@@ -3,41 +3,29 @@ from pandas.core.accessor import DirNamesMixin
 
 class CSP(object):
 
-    def __init__(self, machines,tasks) -> None:
+    def __init__(self, machines,tasks, total_time) -> None:
                 
         info_mach = self.info_machines(machines)
         self.shifts = pd.DataFrame( columns = ['Tarea', 'Maquina', 'Tipo', 'Turno', 'Duracion'], dtype = object)
         df = pd.DataFrame( columns =['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype=object)
 
         for tarea in tasks:
+            dominio = list()
             indx = 0
             for mac in machines:
                 
                 # si la maquina y la tarea son del mismo tipo 
-                if mac.typ == tarea.tipo:
-                    df_temp = pd.DataFrame(tarea.domain, columns =[ 'Tipo' , 'Turno'])
-                    
-                    
-                    df_temp['Maquina'] = mac.ide
-                    df_temp['Tarea'] = tarea.ide
+                for time in range(total_time):
+                    if mac.typ == tarea.tipo:
+                        dominio.append( (tarea.ide, mac.ide, tarea.tipo ,time) )
+                   
+                        
+                        
+            
+            df_temp = pd.DataFrame(dominio, columns =['Tarea', 'Maquina', 'Tipo', 'Turno'], dtype=object)
+            df = df.append(df_temp, ignore_index= True)
 
-                    
-                    df = df.append(df_temp, ignore_index= True)
-
-
-
-            # for i in range( info_mach[ tarea.tipo ] ):
-                
-            #     indx = machines.index(tarea.tipo,  0 if indx == 0 else indx + 1)
-                
-
-            #     df_temp = pd.DataFrame(tarea.domain, columns =[ 'Tipo Tarea', 'Turno'])
-            #     df_temp['Maquina'] = indx
-            #     df_temp['Tarea'] = tarea.ide
-            #     # df_temp.drop('Tipo', inplace=True, axis=1)
-                
-                
-            #     df = df.append(df_temp, ignore_index= True)
+       
         
         self.dominio_actual = df.copy()
         # self.dominio_actual.to_csv('domio.csv', index=False , sep =';')
