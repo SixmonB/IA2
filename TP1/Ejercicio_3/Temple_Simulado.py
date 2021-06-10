@@ -72,24 +72,21 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo = 4):
+    def Funcion_Decrecimiento(self , modo = 2):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
         if modo == 1:
             self.TEMPERATURA = self.T_INICIAL - self.it
             
-        #cuadratico
-        elif modo == 2:
-            self.TEMPERATURA = self.T_INICIAL - self.it*2
-        
+       
         #Decreciemiento exponencial por 2
-        elif modo == 3:
+        elif modo == 2:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/2
         
         # decreciemiento exponencial por 4
-        elif modo == 4:
+        elif modo == 3:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/4
         
@@ -98,7 +95,7 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA*100/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*1000/self.TEMPERATURA) *1000)
         azar = randint(0,1000)
         
         if azar <= self.umbral_probabilidad: return True
