@@ -10,6 +10,7 @@ sys.path.append(str(package_root_directory))
 
 
 import matplotlib.pyplot as plt
+
 import numpy as np
 from Ejercicio_3.Punto import Punto  
 from Ejercicio_3.cache import *
@@ -29,7 +30,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 2000
+        self.T_INICIAL = 1000
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -97,7 +98,7 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA*1000/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*100/self.TEMPERATURA) *1000)
         azar = randint(0,1000)
         
         if azar <= self.umbral_probabilidad: return True
@@ -210,7 +211,7 @@ if __name__ == '__main__':
     rows = 13
     almacen = Layout(rows,cols) 
     pick_max = len(almacen.shelves)
-    ord_max = 150
+    ord_max = 100
     
     
     memoria = Cache()
