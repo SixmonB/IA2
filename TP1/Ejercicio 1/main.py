@@ -108,7 +108,7 @@ while True:
                 # los prints son para visualizar resultados
                 print("\nAbriendo nodo numero: \n", nodes[aux].name)
                 print("Nodo abierto en posicion: \n", nodes[aux].position)
-                print("Funcion euristica del nodo abierto: \n", nodes[aux].distance)
+                print("Funcion heuristica del nodo abierto: \n", nodes[aux].distance)
                 print("Nivel: \n", nodes[aux].level)
 
                 break
