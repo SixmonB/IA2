@@ -10,42 +10,25 @@
 
 
 % Rama IZQUIERDA
-
-% verifciar luego si esta ok aun esta en proceso
-verifciar(valvula) :-  
-
-    thickness( thickness, ok ), writeln('Todo OK');
-    thickness( thickness, no ), writeln('Todo MAL');
-
-    (   estado( thickness, desconocido ), 
-        (   
-            ( estado(valvula_components_having_effects, no ), writeln('Verificar the thickness valve') );
-            ( estado(safety_valve_has_continuous_evacuation, no ), writeln('Valvula cerrado no esta por aca la solucion') );
-            verificar( safety_valve_has_continuous_evacuation )
-        ) 
-        
-        
-    ).
-
-verifciar(safety_valve_components_having_effects) :-  
-
+verificar(valvula_1) :-  
+    thickness( valvula_1, Espesor ), threshold(valvula_1, Limite), Espesor < Limite , writeln('Espesor MAYOR que limite');
+    thickness( valvula_1, Espesor ), threshold(valvula_1, Limite), Espesor >= Limite , writeln('Espesor MENOR que limite');
     
-    estado( safety_valve_components_having_effects, no ), writeln('Todo MAL');
 
-    (   estado( safety_valve_components_having_effects, desconocido ), 
+    (   thickness( valvula_1, desconocido ), 
         (   
-
-            estado(safety_valve_components_having_effects, desconocido), writeln('Verificar safety valve has continuous evacuation').
-            ( estado(safety_valve_has_continuous_evacuation, ok ), writeln('Verificar si control and sensor pipes estan bloqueados') );
-            ( estado(safety_valve_has_continuous_evacuation, no ), writeln('Valvula cerrado no esta por aca la solucion') );
-            verificar( safety_valve_has_continuous_evacuation )
+            ( estado(valvula_components_having_effects, no ), writeln('Verificar Thickness valve') );
+            verificar( valvula_components_having_effects )
         ) 
-        
-        
+                
     ).
 
-        
+verificar(safety_valve_components_having_effects) :-  
 
+    estado( safety_valve_components_having_effects, no ), writeln('Todo OK');
+    estado( safety_valve_components_having_effects, no ), writeln('Todo MAL');
+    
+    estado( safety_valve_components_having_effects, desconocido ), writeln('Verificar safety valve components having effects').
 
 
 
@@ -116,9 +99,7 @@ verificar(control_and_sensor_pipes_blocked) :-
         (   estado( control_and_sensor_pipes_blocked, desconocido ), 
             (( estado(line_gas_pressure_appropriate, ok ), writeln('Verificar si control and sensor pipes estan bloqueados'));
             verificar( line_gas_pressure_appropriate  )) ).
-
-
-
+ 
 
 
 verificar(line_gas_pressure_appropriate) :-
@@ -139,6 +120,23 @@ verificar(line_gas_pressure_appropriate) :-
     ).
 
 
+% --------- Rama IZQUIERDA ---------
+
+verificar(leakage_fixed_with_wrench_at_joints) :- 
+
+    estado(leakage_fixed_with_wrench_at_joints, ok), writeln('Todo OK');
+    estado(leakage_fixed_with_wrench_at_joints, no), writeln('Todo MAL');
+    (
+        estado(leakage_fixed_with_wrench_at_joints, desconocido), 
+        (
+            (estado(gas_leakage_at_joint, ok), writeln('Verificar leakage fixed with wrench at joints'));
+            verificar(gas_leakage_at_joint)
+        )
+    ).
+verificar(gas_leakage_at_joint) :- 
+    estado(leakage_fixed_with_wrench_at_joints, no), writeln('The safety valve joint are free of gas leakage.');
+    estado(leakage_fixed_with_wrench_at_joints, desconocido), writeln('Verificar gas leakage at joint');
+
 
 
 /* Ground Facts de instancia variables (podrian resolverse mediante sensado o agregando la informacion interactivamente a la base de conocimientos) */
@@ -150,3 +148,9 @@ estado(control_valve_sensors_blocked, desconocido).
 estado(valve_status_closed, desconocido).
 estado(relief_valve_ok_with_10_percent_more_pressure, desconocido).
 estado(safety_valve_has_continuous_evacuation, desconocido).
+
+
+
+
+thickness(valvula_1, Esp) :-  Esp is 30.
+threshold(valvula_1, Thres) :-  Thres is 20.

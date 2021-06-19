@@ -1,4 +1,4 @@
-% alarma(X) :-  explota(X).
+alarma(X) :-  explota(X).
 
 explota(Tuberia) :- tuberia(Tuberia), temperatura(Tuberia,Temp), presion(Tuberia,P), P > 100, Temp > 150,   writeln('Va a explotar').
 

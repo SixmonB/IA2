@@ -47,3 +47,5 @@ estado(control_valve_sensors_blocked, desconocido).
 estado(valve_status_closed, desconocido).
 estado(relief_valve_ok_with_10_percent_more_pressure, desconocido).
 estado(safety_valve_has_continuous_evacuation, desconocido).
+
+
