@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #Hiperparámetros
     indiv_quant = 20 #Cantidad de individuos a generar
     historal_orders = 100 #Cantidad de ordenes historicas a considerar
-    it = 10 #Cantidad de iteraciones
+    it = 20 #Cantidad de iteraciones
 
     #Lectura de las ordenes del archivo .txt y las almacenamos en la lista all_orders
     all_orders = list()
@@ -53,6 +53,7 @@ if __name__ == "__main__":
         #Asignamos a cada producto dentro del modelo del individuo un lugar fijo en las estanerías
         for i in all_individuals:
             i.assign_products_to_shelves(shelves[0:101])
+            print(shelves[0:101])
 
         #Ejecutamos temple simulado para cada orden, para cada indviduo. Calculamos costo promedio para las ordenes de cada
         #individuo

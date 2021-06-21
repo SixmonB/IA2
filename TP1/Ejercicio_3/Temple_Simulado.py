@@ -6,8 +6,7 @@ file = Path(__file__). resolve()
 package_root_directory = file.parents [1]  
 sys.path.append(str(package_root_directory))
 
-from Ejercicio_4.orders import Orders
-from Ejercicio_4.Individual import Individual
+#from Ejercicio_4.orders import Orders
 from Ejercicio_2.Layout import *
 from Ejercicio_3.Temple_Simulado import *
 from Ejercicio_3.Punto import *
@@ -35,7 +34,7 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 1000
+        self.T_INICIAL = 30
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -77,7 +76,7 @@ class Temple_Simulado():
         self.estado_siguiente[per_1] = self.estado_actual[per_2]
         self.estado_siguiente[per_2] = self.estado_actual[per_1]
 
-    def Funcion_Decrecimiento(self , modo = 4):
+    def Funcion_Decrecimiento(self , modo = 2):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
 
         #lineal
@@ -124,7 +123,7 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max = 2000
+        it_max = 1000
         
         terminado = False
         convergencia = False

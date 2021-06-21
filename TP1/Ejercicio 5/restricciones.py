@@ -12,7 +12,9 @@ class CSP(object):
         for tarea in tasks:
             indx = 0
             for mac in machines:
-                
+                print(mac.typ)
+                print(tarea.tipo)
+                print("********")
                 # si la maquina y la tarea son del mismo tipo 
                 if mac.typ == tarea.tipo:
                     df_temp = pd.DataFrame(tarea.domain, columns =[ 'Tipo' , 'Turno'])

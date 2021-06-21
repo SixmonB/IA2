@@ -6,7 +6,12 @@ class Cache():
     'Guara la distancia entre ubicaciones apra acelerar el codigo'
     def __init__(self) -> None:
         p = Path(os.getcwd())
-        self.path = p/'IA2'/'TP1'/'Ejercicio_3/'
+        #current_dir = os.path.abspath(__file__)
+        #current_dir = current_dir.rstrip('\orders.py')
+        self.path = p/'TP1'/'Ejercicio_3/'
+        #self.path.rstrip('cache.py')
+        print(self.path)
+        #self.path = current_dir
 
         
 
