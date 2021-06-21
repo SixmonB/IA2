@@ -44,6 +44,6 @@ class Layout:
                     self.shelves.append([j,i])
         for i in self.shelves:
             self.layout[i[0],i[1]] = 2
-        print(self.layout) 
+        # print(self.layout) 
         return self.shelves
 

@@ -12,7 +12,7 @@ if __name__ == "__main__":
     my_machines = [1,1,1,2,2,3,4,4,5]
     tasks = []
     machines = []
-    domain = []
+    
     duration = []
     total_time = 0
 
@@ -23,15 +23,11 @@ if __name__ == "__main__":
     # sumando el tiempo total de duracion de las tareas, definimos el dominio formando tuplas 
     # con los tipos de maquinas disponibles y turnos de trabajo, segun el tiempo total de trabajo.
 
-    for i in range(1, m_type+1):
-        for j in range(total_time):
-            domain.append((i, j))
-
     for i in range(1,len(my_machines)+1):
         machines.append(machine.Machine( "idm_" + str(i), my_machines[i-1] ))
 
     for i in range(1, task_quantity+1):
-        tasks.append(task.Task("idt_"+str(i),duration[i-1],random.randrange(1, m_type, 1), domain))
+        tasks.append(task.Task("idt_"+str(i),duration[i-1],random.randrange(1, m_type, 1)))
         # print(tasks[i].ide)
 
     
@@ -41,22 +37,22 @@ if __name__ == "__main__":
     # Las restricciones son entre 2 tareas que requieren la misma maquina,
     # por lo que hay que definir el orden de funcionamiento.
     # Empezamos eliminando del dominio de cada tarea, todas las combinaciones 
-    # que impliquen una maquina distinta de la requerida.
+    # # que impliquen una maquina distinta de la requerida.
 
-    for tarea in tasks:
-        delete = list()
+    # for tarea in tasks:
+    #     delete = list()
         
-        for j in range(len(tarea.domain)):
+    #     for j in range(len(tarea.domain)):
             
-            if j<len(tarea.domain):
+    #         if j<len(tarea.domain):
             
                       
-                if (tarea.domain[j][0] != tarea.tipo):
-                    #print("i y j", i, j)
-                    delete.append(tarea.domain[j])
-                    # tarea.domain.remove(tarea.domain[j])
+    #             if (tarea.domain[j][0] != tarea.tipo):
+    #                 #print("i y j", i, j)
+    #                 delete.append(tarea.domain[j])
+    #                 # tarea.domain.remove(tarea.domain[j])
 
-        for x in delete: tarea.domain.remove(x)
+    #     for x in delete: tarea.domain.remove(x)
     # print(tasks[0].domain)
 
 
@@ -69,7 +65,7 @@ if __name__ == "__main__":
     #     print( tas.domain)}   
     
     index = 0
-    csp =  CSP(machines, tasks)
+    csp =  CSP(machines, tasks, total_time)
 
     def my_recursive(index):
         csp.podar_arbol(tasks[index])
@@ -80,7 +76,7 @@ if __name__ == "__main__":
                 return my_recursive(index+1)
             else : return True
         elif len(csp.dominio_tarea) == 0:
-            csp.backtracking(index)
+            csp.backtracking()
             return my_recursive(index-1)
         
 

@@ -25,7 +25,7 @@ from random import randint
 from math import exp
 
 class Temple_Simulado():
-    def __init__(self, orden, mapa) -> None:
+    def __init__(self, orden, mapa,t_inicial, mult_energia = 1) -> None:
         self.costo_total = int()
         self.almacen = mapa
         self.punto_inicio = Punto(4,4)
@@ -34,7 +34,8 @@ class Temple_Simulado():
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
-        self.T_INICIAL = 30
+        self.T_INICIAL = t_inicial
+        self.it_max = t_inicial
         self.TEMPERATURA = int() # o float()
 
         self.it = int() # o float()
@@ -47,6 +48,7 @@ class Temple_Simulado():
         #para graficar
         self.eje_x = list()#np.array([])
         self.evolucion_costo = list()#np.array([])#list()
+        self.mult_energia = mult_energia
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
@@ -83,17 +85,14 @@ class Temple_Simulado():
         if modo == 1:
             self.TEMPERATURA = self.T_INICIAL - self.it
             
-        #cuadratico
-        elif modo == 2:
-            self.TEMPERATURA = self.T_INICIAL - self.it*2
-        
+       
         #Decreciemiento exponencial por 2
-        elif modo == 3:
+        elif modo == 2:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/2
         
         # decreciemiento exponencial por 4
-        elif modo == 4:
+        elif modo == 3:
             if self.it == 0: self.TEMPERATURA = self.T_INICIAL
             self.TEMPERATURA = self.TEMPERATURA/4
         
@@ -102,10 +101,10 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA*100/self.TEMPERATURA) *1000)
-        azar = randint(0,1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA* self.mult_energia/self.TEMPERATURA) *1000)
+        self.azar = randint(1,1000)
         
-        if azar <= self.umbral_probabilidad: return True
+        if self.azar <= self.umbral_probabilidad: return True
         else: return False
 
 
@@ -123,20 +122,20 @@ class Temple_Simulado():
 
     def Iniciar_Busqueda_Local(self):
         "Procedimiento del temple simulado en si"
-        it_max = 1000
+        # self.it_max = 30
         
         terminado = False
         convergencia = False
         it_converg = 0
-        it_converg_max = 200
-        while not terminado and not convergencia and self.it < it_max:
+        it_converg_max = 100
+        while not terminado and not convergencia and self.it < self.it_max:
             # print(self.TEMPERATURA)
             devolucion = str()
             self.Funcion_Decrecimiento()
             
             # print(self.TEMPERATURA)
             if self.TEMPERATURA <= 0   :
-                self.causa = f'Iteraciones agotadas {self.it}'
+                self.causa = f'Tmperatura 0'
                 break
            
             self.Generar_Vecino()
@@ -173,7 +172,7 @@ class Temple_Simulado():
             if it_converg == it_converg_max: 
                 self.causa ='Convergencia del codigo'
                 break 
-            if self.it == it_max   :
+            if self.it == self.it_max   :
                 self.causa = f'Iteraciones agotadas {self.it}'
                 break
             # it_converg += 1
@@ -226,7 +225,7 @@ if __name__ == '__main__':
     pick_max = len(almacen.shelves)
     ord_max = 100
     
-    
+    temperatura_inicial = 500
     memoria = Cache()
     graficos_evolucion = list()
 
@@ -234,13 +233,15 @@ if __name__ == '__main__':
 
     for ex in range(q_experiment):
 
-        q_picks = randint(7,25 )  # cantidad de pedidos por orden
-        q_ordenes =  randint(30,ord_max ) #Cantidad de oprdenes por experimento       20
+        q_picks = randint(30,45 )  # cantidad de pedidos por orden
+        
+        q_ordenes =  randint(50,ord_max ) #Cantidad de oprdenes por experimento       20
         print('\n\n')
         print ('='.center(40, "=")) 
         print(f'EXPERIMENTO: {ex} ')
         print(f'Cantidad de ordenes: {q_ordenes}')
         print(f'Pedidos por orden: {q_picks}')
+        print(f'Pedidos por orden: {temperatura_inicial}')
         print ('='.center(40, "=")) 
         print('\n\n')
         for j in range(q_ordenes):
@@ -253,16 +254,15 @@ if __name__ == '__main__':
                 n = randint(0, len(almacen.shelves)-1)
                 a = almacen.shelves[n]
                 orden.append(Punto(almacen.shelves[n][0],almacen.shelves[n][1]))
-            # orden = [Punto(0,1),Punto(8,0),Punto(10,2),Punto(4,12)]
+            
 
 
-            # print(str_orden(orden) )
+            
             
                     
-            temple = Temple_Simulado(orden,almacen)
+            temple = Temple_Simulado(orden,almacen,temperatura_inicial)
             temple.Iniciar_Busqueda_Local()
-            # n_iteracion = np.array(temple.evolucion_costo[0])
-            # n_iteracion = np.arange(0,len(temple.evolucion_costo))
+            
             n_iteracion = normalizar ( np.array(temple.eje_x) )
             
 
@@ -271,12 +271,8 @@ if __name__ == '__main__':
             graf  = plt.plot(n_iteracion,calidad)
             
             
-            # print(temple.causa)
-            # print('La orden tiene que recogerse asi: ',str_orden(temple.estado_actual))
-            # print('El costo: ', temple.costo_actual)
-            # print('Cantidad de iteraciones: ', temple.it)
-            # print('\n')
-            # plt.show()
+            print(temple.causa)
+      
         memoria.Guardar_Memoria()
         plt.show()
 
