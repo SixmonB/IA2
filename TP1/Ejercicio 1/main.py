@@ -123,10 +123,11 @@ while True:
     #print(cnt)
 shortest_path = path
 
+
 # recorremos la lista desde el final comparando con el elemento anterior. 
 # La idea es que el nivel de profundidad de un elemento sea mas grande
 # que el elemento anterior, por lo que si no se cumple esta condicion,
-# se elimina los elementos que signifiquen un desvio del camino mas corto.#
+# se elimina los elementos que signifiquen un desvio del camino mas corto.
 for i in range(len(shortest_path)-1, 0, -1):
     if shortest_path[i].level <= shortest_path[i-1].level:
         shortest_path.remove(nodes[i-1])
