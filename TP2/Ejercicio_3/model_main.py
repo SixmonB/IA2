@@ -34,15 +34,14 @@ def simular(t_max, delta_t, theta_0, v_0, a_0):
     y.append(theta)
     y1.append(v)
   
-  print("Theta final: ",theta)
-  print("velocidad final: ",v)
+  print("Theta final: ",round(theta,1))
+  print("velocidad final: ",round(v,2))
 
   fig, ax = plt.subplots()
   ax.plot(x, y)
   ax.plot(x,y1)
 
   ax.set(xlabel='time (s)', ylabel='theta', title='Delta t = ' + str(delta_t) + " s")
-  plt.legend(loc="upper right")
   ax.grid()
   
   plt.show()
