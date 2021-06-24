@@ -58,7 +58,7 @@ def calcula_aceleracion(theta, v, f):
 if __name__ == "__main__":
   t_max = 10
   dt = 0.0001
-  theta_0 = 25
+  theta_0 = -45
   v_0 = 0
   a_0 = 0
   simular(t_max, dt, theta_0, v_0, a_0)
