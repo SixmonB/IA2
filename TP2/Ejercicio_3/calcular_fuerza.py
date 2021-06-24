@@ -13,7 +13,7 @@ def calcular_fuerza(theta,velocity):
     #Valores máximos constantes a considerar
     theta_max = 45*math.pi/180
     v_max = 2
-    force_max = 100
+    force_max = 50
 
     #Creamos los conjuntos borrosos, con sus limites en valores abstractos y sus centros 
     fuzzy_sets_theta = crear_grupos_difusos(theta_max,fuzzy_sets,'theta')

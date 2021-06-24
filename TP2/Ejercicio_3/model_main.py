@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import constants
-from main import calcular_fuerza
+from calcular_fuerza import calcular_fuerza
 
 CONSTANTE_M = 2 # Masa del carro
 CONSTANTE_m = 1 # Masa de la pertiga
