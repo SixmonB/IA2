@@ -34,8 +34,8 @@ def simular(t_max, delta_t, theta_0, v_0, a_0):
     y.append(theta)
     y1.append(v)
   
-  print("Theta final: ",round(theta,1))
-  print("velocidad final: ",round(v,2))
+  print("Theta final: ",round(theta,3))
+  print("velocidad final: ",round(v,3))
 
   fig, ax = plt.subplots()
   ax.plot(x, y)
