@@ -4,67 +4,67 @@
         LA01
         LA02
         LA03
-     	LA04
-     	LA05
+     	  LA04
+     	  LA05
         AA01
         AA02
         AA03
         FB01
         FB02
         FB03
-     	FB04
+     	  FB04
         MDZ
         AEP
         COR
         SFN
-     	MDQ
-     	PAR
-     	TKY
-     	NYC
-     	WSG
+     	  MDQ
+     	  PAR
+     	  TKY
+     	  NYC
+     	  WSG
         FERTILIZANTE
         TELA-GRANIZO
         COSECHADORA
         AUTOPARTES
-     	ALFAJORES
-     	FERNET
-     	VINO
-     	MADERA
-     	DURAZNOS
-     	REMERAS
+     	  ALFAJORES
+     	  FERNET
+     	  VINO
+     	  MADERA
+     	  DURAZNOS
+     	  REMERAS
     )
     (:init 
         (avion LA01)
         (avion LA02)
         (avion LA03)
-     	(avion LA04)
-     	(avion LA05)
+     	  (avion LA04)
+     	  (avion LA05)
         (avion AA01)
         (avion AA02)
         (avion AA03)
         (avion FB01)
         (avion FB02)
         (avion FB03)
-     	(avion FB04)
+     	  (avion FB04)
         (aeropuerto MDZ)
         (aeropuerto AEP)
         (aeropuerto COR)
         (aeropuerto SFN)
-     	(aeropuerto MDQ)
-     	(aeropuerto PAR)
-     	(aeropuerto TKY)
-     	(aeropuerto NYC)
-     	(aeropuerto WSG)
+     	  (aeropuerto MDQ)
+     	  (aeropuerto PAR)
+     	  (aeropuerto TKY)
+     	  (aeropuerto NYC)
+     	  (aeropuerto WSG)
         (carga FERTILIZANTE)
         (carga TELA-GRANIZO)
         (carga COSECHADORA)
         (carga AUTOPARTES)
         (carga ALFAJORES)
-     	(carga FERNET)
-    	(carga VINO)
-     	(carga MADERA)
-     	(carga DURAZNOS)
-     	(carga REMERAS)
+     	  (carga FERNET)
+    	  (carga VINO)
+     	  (carga MADERA)
+     	  (carga DURAZNOS)
+     	  (carga REMERAS)
         (en LA01 MDZ)
         (en LA02 AEP)
         (en LA03 COR)
@@ -81,7 +81,7 @@
         (en TELA-GRANIZO SFN)
         (en COSECHADORA MDZ)
         (en AUTOPARTES COR)
-     	(en FERNET COR)
+     	  (en FERNET COR)
         (en ALFAJORES MDQ)
         (en VINO MDZ)
         (en MADERA COR)
@@ -99,7 +99,7 @@
             (en VINO PAR)
             (en MADERA MDZ)
             (en DURAZNOS AEP)
-	    (en REMERAS MDZ)
+	         (en REMERAS MDZ)
         )
     )
 )
