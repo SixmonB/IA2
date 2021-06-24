@@ -44,4 +44,40 @@
  :effect
     (fabricada ?f)
 )
+  
+(:action op-taladrado
+ :parameters ( ?o ?f ?ft ?oper )
+ :precondition
+	(and 
+        (orientacion-pieza ?o)
+        (orientacion-feature ?f ?o)
+        (orientacion ?o) 
+        (feature ?f)
+        (tipo ?ft)
+        (feature-tipo ?f ?ft)
+        (fabricable ?ft ?oper)
+        (operacion ?oper)
+        (= ?oper taladrado)
+    )
+ :effect
+    (fabricada ?f)
+)
+
+(:action op-torneado
+ :parameters ( ?o ?f ?ft ?oper )
+ :precondition
+	(and 
+        (orientacion-pieza ?o)
+        (orientacion-feature ?f ?o)
+        (orientacion ?o) 
+        (feature ?f)
+        (tipo ?ft)
+        (feature-tipo ?f ?ft)
+        (fabricable ?ft ?oper)
+        (operacion ?oper)
+        (= ?oper torneado)
+    )
+ :effect
+    (fabricada ?f)
+)
 )
