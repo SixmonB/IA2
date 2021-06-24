@@ -2,7 +2,7 @@ class Obstacles(object):
     def __init__(self, center):
         self.center = center
         self.obstacle = []
-        n = 1
+        n = 3
         # siendo n la cantidad de elementos que quiero generar en sentido positivo y negativo
         # 2*n + 2 : limite superior del for
         # 2*n: limite inferior del for

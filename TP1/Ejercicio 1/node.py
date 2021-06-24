@@ -18,7 +18,7 @@ class New_node(object):
             # tomamos la maxima diferencia entre la posicion actual y el origen 
             # para tener una referencia de la cantidad de iteraciones que hubo entre
             # ambas posiciones. La idea es evitar casos en los que se rote una sola articulacion, 
-            # y preferenciar aquellos casos en los que muevo todas las articulaciones al mismo tiempo#
+            # y preferenciar aquellos casos en los que muevo todas las articulaciones al mismo tiempo
             distance_origin = pow(pow(self.position[i] - self.begining[i], 2),0.5)            
             if distance_origin>max_dist : max_dist= distance_origin 
             distance_end += pow(pow(self.position[i] - self.finish[i], 2),0.5)
