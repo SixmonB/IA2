@@ -27,7 +27,7 @@ def crear_grupos_difusos(max_limit,sets,typ):
 
     return fuzzy_set #Devuelvo el conjunto difuso creado como un diccionario, por ejemplo para theta {'NG':[-2,-0.8,-1.6],'NP':[...]}
 
-def fusificar(value,fuzzy_set,typ):
+def fusificar(value,fuzzy_set,max_val_theta,max_val_v,typ):
     'Devuelve a que conjuntos difusos pertenece el valor que estoy analizando (que puede ser de theta o v)'
     #value = valor actual ABSTRACTO (por ejemplo pi/3 radianes)que estoy analizando
     #fuzzy_set = contiene el diccionario (creado en la funcion anterior) que contiene todos los conjuntos difusos para una variabable theta o v
@@ -37,10 +37,10 @@ def fusificar(value,fuzzy_set,typ):
     for key,val in fuzzy_set.items():
         if value<val[1] and value>val[0]:
             keys.append(key)
-        elif typ == 'theta' and value>=45*math.pi/180: keys=['PG']
-        elif typ == 'theta' and value<=-45*math.pi/180: keys=['NG']
-        elif typ == 'v' and value>=2: keys=['PG']
-        elif typ == 'v' and value<=-2: keys=['NG']
+        elif typ == 'theta' and value>=max_val_theta: keys=['PG']
+        elif typ == 'theta' and value<=-max_val_theta: keys=['NG']
+        elif typ == 'v' and value>=max_val_v: keys=['PG']
+        elif typ == 'v' and value<=-max_val_v: keys=['NG']
     #keys = conjuntos difusos a los que pertenece el valor que estoy analizando (por ej. pi/5rad pertenece a PP Y PG, por ende keys = [PP,PG])
     return keys
 
@@ -62,7 +62,6 @@ def calcular_pertenencia(value,keys,fuzzy_set,type):
     u = dict()
 
     #Calculamos las pertenencias
-    print(keys)
     if len(keys)==1:
         u[keys[0]]=1
     else:
@@ -74,7 +73,6 @@ def calcular_pertenencia(value,keys,fuzzy_set,type):
             u[keys[j]]=aux_u
             j+=1
 
-    #print("Pertenencias:{}".format(u))
     return u
 
 
@@ -112,7 +110,6 @@ def procesamiento(rules,u_theta,u_v):
             a2 = u_v[k[1]]
             mins_values.append([min(a1,a2),k[2]])
     total_values=mins_values+u_preproc
-    #print(total_values)
     return total_values
 
 def preprocesamiento(rules,u_theta,u_v):
@@ -170,4 +167,4 @@ def desfusificar(rules,fuzzy_set_force):
     abstract_force = sum(product)/sum_us
     return abstract_force
 
-crear_grupos_difusos(2,['NG','NP','Z','PP','PG'],'v')
+#crear_grupos_difusos(2,['NG','NP','Z','PP','PG'],'v')

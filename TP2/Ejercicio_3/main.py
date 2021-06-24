@@ -1,8 +1,7 @@
-from IA2.TP2.Ejercicio_3.functions import desfusificar, procesamiento
 from functions import *
 import math
 
-def run(theta,velocity):
+def calcular_fuerza(theta,velocity):
     #Definición de fam, limites de trabajo y conjuntos difuso
     fuzzy_sets = ['NG','NP','Z','PP','PG']
     fam = [['PG','PG','PG','PP','Z'],
@@ -11,19 +10,19 @@ def run(theta,velocity):
             ['PP','Z','NP','NG','NG'],
             ['Z','NP','NG','NG','NG']]
 
-    #Definimos valores máximos
+    #Valores máximos constantes a considerar
     theta_max = 45*math.pi/180
     v_max = 2
-    force_max = 50
+    force_max = 100
 
-    #Definimos conjuntos borrosos
+    #Creamos los conjuntos borrosos, con sus limites en valores abstractos y sus centros 
     fuzzy_sets_theta = crear_grupos_difusos(theta_max,fuzzy_sets,'theta')
     fuzzy_sets_v = crear_grupos_difusos(v_max,fuzzy_sets,'v')
     fuzzy_sets_force = crear_grupos_difusos(force_max,fuzzy_sets,'f')
 
     #Calculamos a que conjunto deifuso (NP,NG,etc) pertenecen las variables de entrada theta y v
-    current_sets_theta = fusificar(theta,fuzzy_sets_theta,'theta') #devuelve a que conjuntos difusos a los que pertenece el theta ingresado, por ejemplo ['PP','PG']
-    current_sets_v = fusificar(velocity,fuzzy_sets_v,'v')#devuelve a que conjuntos difusos a los que pertenece la v ingresada , por ejemplo ['PP','PG']
+    current_sets_theta = fusificar(theta,fuzzy_sets_theta,theta_max,v_max,'theta') #devuelve a que conjuntos difusos a los que pertenece el theta ingresado, por ejemplo ['PP','PG']
+    current_sets_v = fusificar(velocity,fuzzy_sets_v,theta_max,v_max,'v')#devuelve a que conjuntos difusos a los que pertenece la v ingresada , por ejemplo ['PP','PG']
 
     #Calculamos el "porcentaje" de pertenencia de cada valor de entrada a cada uno de los conjuntos difusos a los que ya vimos que pertenece
     u_theta = calcular_pertenencia(theta,current_sets_theta,fuzzy_sets_theta,'theta')
@@ -42,7 +41,8 @@ def run(theta,velocity):
 
     return (abstract_force)
 
-#absf = run(30*math.pi/180,2)
+if __name__ == "__main__":
+    absf = calcular_fuerza(30*math.pi/180,2)
 
     
 

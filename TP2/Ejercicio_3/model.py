@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import constants
-from main import run
+from main import calcular_fuerza
 
 CONSTANTE_M = 2 # Masa del carro
 CONSTANTE_m = 1 # Masa de la pertiga
@@ -27,23 +27,22 @@ def simular(t_max, delta_t, theta_0, v_0, a_0):
   x = np.arange(0, t_max, delta_t)
   for t in x:
     #print("Theta: ",theta*180/(np.pi))
-    print("Theta",theta)
-    print("velocidad",v)
-    f = run(theta,v)
+    f = calcular_fuerza(theta,v)
     a = calcula_aceleracion(theta, v, -f)
-    print("Aceleracion:",a)
     v = v + a * delta_t
     theta = theta + v * delta_t + a * np.power(delta_t, 2) / 2
     y.append(theta)
     y1.append(v)
-    ac.append(a)
+  
+  print("Theta final: ",theta)
+  print("velocidad final: ",v)
 
   fig, ax = plt.subplots()
   ax.plot(x, y)
   ax.plot(x,y1)
-  ax.plot(x,ac)
 
   ax.set(xlabel='time (s)', ylabel='theta', title='Delta t = ' + str(delta_t) + " s")
+  plt.legend(loc="upper right")
   ax.grid()
   
   plt.show()
@@ -55,16 +54,11 @@ def calcula_aceleracion(theta, v, f):
     denominador = CONSTANTE_l * (4/3 - (CONSTANTE_m * np.power(np.cos(theta), 2) / (CONSTANTE_M + CONSTANTE_m)))
     return numerador / denominador
 
-t_max = 5
-dt = 0.0001
-theta_0 = -30
-v_0 = 1
-a_0 = 0
 
-simular(t_max, dt, theta_0, v_0, a_0)
-
-#simular(10, 0.01, 45, 0, 0)
-
-#simular(10, 0.001, 45, 0, 0)
-
-#simular(10, 0.0001, 10, 0, 0)
+if __name__ == "__main__":
+  t_max = 10
+  dt = 0.0001
+  theta_0 = 25
+  v_0 = 0
+  a_0 = 0
+  simular(t_max, dt, theta_0, v_0, a_0)
