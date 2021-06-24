@@ -1,3 +1,4 @@
+from IA2.TP2.Ejercicio_3.functions import desfusificar, procesamiento
 from functions import *
 import math
 
@@ -9,30 +10,39 @@ def run(theta,velocity):
             ['PG','PP','Z','NP','NG'],
             ['PP','Z','NP','NG','NG'],
             ['Z','NP','NG','NG','NG']]
-    rad = math.pi/180
-    max_values_variables = [45*rad,2,50]
-    #Definimos conjuntos borrosos, cada lista tiene [pmin,pmax,centro]
-    
-    fuzzy_sets_theta = {'NG':[-45*rad,-18*rad,-36*rad],'NP':[-36*rad,0*rad,-18*rad],'Z':[-18*rad,18*rad,0],'PP':[0*rad,36*rad,18*rad],'PG':[18*rad,36*rad,45*rad]}
-    fuzzy_sets_v = {'NG':[-2,-0.8,-1.6],'NP':[-1.6,0,-0.8],'Z':[-0.8,0.8,0],'PP':[0,1.6,0.8],'PG':[0.8,2,1.6]}
-    fuzzy_sets_force = {'NG':[-50,-20,-40],'NP':[-40,0,-20],'Z':[-20,20,0],'PP':[0,40,20],'PG':[20,50,40]}  
 
-    #Calculamos a que conjunto difuso pertenecen las variables de entrada ( ) de entrada tita y tita' (o v )
-    sets_theta = obtener_conjuntos_difusos(theta,fuzzy_sets_theta,'theta')
-    sets_v = obtener_conjuntos_difusos(velocity,fuzzy_sets_v,'v')
+    #Definimos valores máximos
+    theta_max = 45*math.pi/180
+    v_max = 2
+    force_max = 50
 
-    #Calcular pertenencias
-    u_theta = calcular_pertenencia(theta,sets_theta,fuzzy_sets_theta,'theta')
-    u_v = calcular_pertenencia(velocity,sets_v,fuzzy_sets_v,'v')
+    #Definimos conjuntos borrosos
+    fuzzy_sets_theta = crear_grupos_difusos(theta_max,fuzzy_sets,'theta')
+    fuzzy_sets_v = crear_grupos_difusos(v_max,fuzzy_sets,'v')
+    fuzzy_sets_force = crear_grupos_difusos(force_max,fuzzy_sets,'f')
 
-    #Formamos las reglas, por ejemplo PG Y PG -> NG , como [PG,PG,NG] y vemos si hay consecuentes repetidos. Devolvemos las reglas definitivas
-    rules = formar_reglas(sets_theta,sets_v,fam,fuzzy_sets,u_theta,u_v)
+    #Calculamos a que conjunto deifuso (NP,NG,etc) pertenecen las variables de entrada theta y v
+    current_sets_theta = fusificar(theta,fuzzy_sets_theta,'theta') #devuelve a que conjuntos difusos a los que pertenece el theta ingresado, por ejemplo ['PP','PG']
+    current_sets_v = fusificar(velocity,fuzzy_sets_v,'v')#devuelve a que conjuntos difusos a los que pertenece la v ingresada , por ejemplo ['PP','PG']
 
-    abstract_force = desborrosificar(rules,fuzzy_sets_force)
+    #Calculamos el "porcentaje" de pertenencia de cada valor de entrada a cada uno de los conjuntos difusos a los que ya vimos que pertenece
+    u_theta = calcular_pertenencia(theta,current_sets_theta,fuzzy_sets_theta,'theta')
+    u_v = calcular_pertenencia(velocity,current_sets_v,fuzzy_sets_v,'v')
+
+    #Formamos las reglas, por ejemplo PG Y PP -> NG , como [PG,PP,NG] y vemos si hay consecuentes repetidos.
+    rules = formar_reglas(current_sets_theta,current_sets_v,fam,fuzzy_sets)
+
+    #Procesamiento de las reglas creadas
+    u_force = procesamiento(rules,u_theta,u_v)
+
+    #Desfusificamos: A partir de las pertenencias y reglas anteriores, podemos obtener un valor abstracto de fuerza para que la aplique el control
+    abstract_force = desfusificar(u_force,fuzzy_sets_force) 
     print("Fuerza: ",abstract_force)
+    abstract_force = round(abstract_force,1)
+
     return (abstract_force)
 
-absf = run(45*math.pi/180,2)
+#absf = run(30*math.pi/180,2)
 
     
 

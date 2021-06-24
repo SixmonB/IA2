@@ -2,16 +2,37 @@ import collections
 import math
 from numpy.core import shape_base
 
-'''def crear_grupos_difusos(max_limit,sets):
-    length = (max_limit*2/5)
+def crear_grupos_difusos(max_limit,sets,typ):
+    'Crea los grupos difusos con sus limites y sus centros'
+    set_length = (max_limit*2/5)
     limits = list()
-    aux = 0
-    for i in range(5):
-        aux += (-max_limit)+length*2
-        limits.append(aux)
-    print(limits)'''
+    #Cantidad de decimales a considerar en los limites dependiendo si estoy con theta,v, o f
+    if typ=='theta': 
+        decimals = 10
+    else:
+        decimals=1
+    aux = round((-max_limit-set_length/2),decimals)
 
-def obtener_conjuntos_difusos(value,fuzzy_set,typ):
+    for i in range(5): #El 5 es porque tengo 5 conjuntos difusos, NG,NP,Z,PP,PG
+        aux += set_length
+        limits.append(round(aux,decimals))
+    limits = [-max_limit]+limits+[max_limit]
+    fuzzy_set = dict()
+    j=0
+    for i in sets:
+        a=j
+        b=j+2
+        fuzzy_set[i]=[limits[a],limits[b],limits[b]-set_length]
+        j+=1
+
+    return fuzzy_set #Devuelvo el conjunto difuso creado como un diccionario, por ejemplo para theta {'NG':[-2,-0.8,-1.6],'NP':[...]}
+
+def fusificar(value,fuzzy_set,typ):
+    'Devuelve a que conjuntos difusos pertenece el valor que estoy analizando (que puede ser de theta o v)'
+    #value = valor actual ABSTRACTO (por ejemplo pi/3 radianes)que estoy analizando
+    #fuzzy_set = contiene el diccionario (creado en la funcion anterior) que contiene todos los conjuntos difusos para una variabable theta o v
+    #typ = contiene el tipo de variable que estoy analizando (theta o v)
+    
     keys = []
     for key,val in fuzzy_set.items():
         if value<val[1] and value>val[0]:
@@ -20,14 +41,20 @@ def obtener_conjuntos_difusos(value,fuzzy_set,typ):
         elif typ == 'theta' and value<=-45*math.pi/180: keys=['NG']
         elif typ == 'v' and value>=2: keys=['PG']
         elif typ == 'v' and value<=-2: keys=['NG']
+    #keys = conjuntos difusos a los que pertenece el valor que estoy analizando (por ej. pi/5rad pertenece a PP Y PG, por ende keys = [PP,PG])
     return keys
 
 def calcular_pertenencia(value,keys,fuzzy_set,type):
-    centers = encontrar_centros(keys,fuzzy_set)
-    m_t=3.18 #Las pendientes de las rectas no cambian, son las mismas , solo cambia sus signo
-    m_v=1.25
+    'Calulamos la pertenencia de cada valor abstracto a cada conjunto difuso que corresponda'
+    #value = valor actual ABSTRACTO de la variable que estoy analizando
+    #fuzzy_set = diccionario que contiene los conjuntos difusos para una determinada variable
+    #keys = conjuntos difusos a los que pertenece el valor abstracto que estoy analizando
 
-    if type == 'theta':
+    centers = encontrar_centros(keys,fuzzy_set) #Obtenemos los centros de cada conjunto difuso (serían los centros de los triangulos)
+    m_t=3.18 #Pendiende de rectas de conjuntos difusos de theta
+    m_v=1.25 #Pendiende de rectas de conjuntos difusos de velocidad
+
+    if type == 'theta': #Elegimos con qué pendiente vamos a trabajar si estamos analizando theta o v
         m=m_t
     else:
         m=m_v
@@ -40,26 +67,29 @@ def calcular_pertenencia(value,keys,fuzzy_set,type):
         u[keys[0]]=1
     else:
         for i in centers:
-            aux_u = m*(value-i)+1
-            if aux_u>1: #La partenencia no puede dar mayor a 1 , si lo da es porque la pendiente en esa parte es negativa:
+            aux_u = m*(value-i)+1 #Ecuación de una recta => m*(x-x0)+y0
+            if aux_u>1: #La pertenencia no puede dar mayor a 1 , si lo da es porque la pendiente en esa parte es negativa:
                 m = -m
                 aux_u = abs(m*(value-i)+1)
             u[keys[j]]=aux_u
             j+=1
+
     #print("Pertenencias:{}".format(u))
     return u
 
 
 def encontrar_centros(keys,fuzzy_set):
+    'Encontramos los centros de cada triángulo (los centros se encuentran en la tercer componente de la lista que contiene los límites del triangulo [pmax,pmin,centro])'
     centers = []
     for i in keys:
         aux = fuzzy_set[i]
         centers.append(aux[2])
-    #print("Centros: ",centers)
+    #centers = contiene los centros pero analizanso solo los valores dentro de keys
     return centers
 
-def formar_reglas(sets_theta,sets_v,fam,sets,u_theta,u_v):
+def formar_reglas(sets_theta,sets_v,fam,sets):
     rules = []
+    #'Creamos' las reglas como una lista, por ejemplo PP Y PG -> NP la representamos como [PP,PG,NP]
     for i in sets_theta:
         aux = []
         index_set_theta = sets.index(i)
@@ -68,9 +98,11 @@ def formar_reglas(sets_theta,sets_v,fam,sets,u_theta,u_v):
             force = fam[index_set_theta][index_set_v]
             aux = [i,j,force]
             rules.append(aux)
-    #print(rules)
+    return rules
 
-    #Tomamos las primeras 2 reglas y vemos si tienen o no el mismo consecuente
+def procesamiento(rules,u_theta,u_v):
+    'Procesamos las reglas creadas y obtenemos los valores de pertenencias de la fuerza'
+    #Tomamos las reglas creadas y verificamos cuales tienen el mismo consecuente haciendo un preproceso.
     u_preproc,repeated_rules = preprocesamiento(rules,u_theta,u_v)
     mins_values = list()
     for i in range(len(rules)):
@@ -84,21 +116,23 @@ def formar_reglas(sets_theta,sets_v,fam,sets,u_theta,u_v):
     return total_values
 
 def preprocesamiento(rules,u_theta,u_v):
+    'Preprocesamiento para reglas que tienen los mismos consecuentes'
+    
     #Guardamos los consecuentes de cada regla
-    consecuents = list()
+    consequents = list()
     for i in rules:
-        consecuents.append(i[2])
+        consequents.append(i[2])
 
-    #Analizamos si hay consecuentes iguales
-    repeated = [x for x, y in collections.Counter(consecuents).items() if y > 1]
+    #Obtenemos cuales son los consecuentes que se repiten
+    repeated = [x for x, y in collections.Counter(consequents).items() if y > 1]
 
-    #Si los hay, guardamos en una lista que reglas son estas
+    #Si los hay, guardamos en una lista que reglas tienen los mismos consecuentes 
     same_consecuent = dict()
     aux = list()
     repeated_rules = list()
     count = 0
     if repeated != []:
-        for i in consecuents:
+        for i in consequents:
             for k in repeated:
                 if i==k:
                     aux.append(rules[count])
@@ -107,7 +141,7 @@ def preprocesamiento(rules,u_theta,u_v):
             same_consecuent[k]=aux
         count = 0
         
-    #Aplicamos la regla de max(min(a1,a2),min(b1,b2),...)
+    #Aplicamos la regla de max(min(a1,a2),min(b1,b2),...) (osea aplicar la conjuncion y disyuncion)
     a = list()
     mins_values = list()
     max_value = list()
@@ -119,11 +153,13 @@ def preprocesamiento(rules,u_theta,u_v):
             a.append([a1,a2])
             mins_values.append(min(a1,a2))
         max_value.append([max(mins_values),key])
+
     #retornamos el valor maximo obtenido al aplicar la regla y cuales son las reglas que tenian el mismo consecuente
     return max_value,repeated_rules
 
-def desborrosificar(rules,fuzzy_set_force):
-    #Multiplicamos el valor de pertenencia obtenido por su centro:
+def desfusificar(rules,fuzzy_set_force):
+    'Devuelve el valor abstracto de fuerza que deberé aplicar (que aplicará finalmente el controlador)'
+    #Multiplicamos el valor de pertenencia obtenido por su centro, luego sumamos y dividmos por la suma de las pertenencias:
     product=list()
     sum_us = 0
     #print(rules)
@@ -134,4 +170,4 @@ def desborrosificar(rules,fuzzy_set_force):
     abstract_force = sum(product)/sum_us
     return abstract_force
 
-crear_grupos_difusos(45,['NG','NP','Z','PP','PG'])
+crear_grupos_difusos(2,['NG','NP','Z','PP','PG'],'v')

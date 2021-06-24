@@ -23,6 +23,7 @@ def simular(t_max, delta_t, theta_0, v_0, a_0):
   y = []
   y1 = []
   force = []
+  ac = []
   x = np.arange(0, t_max, delta_t)
   for t in x:
     #print("Theta: ",theta*180/(np.pi))
@@ -35,12 +36,12 @@ def simular(t_max, delta_t, theta_0, v_0, a_0):
     theta = theta + v * delta_t + a * np.power(delta_t, 2) / 2
     y.append(theta)
     y1.append(v)
-    force.append(-f)
+    ac.append(a)
 
   fig, ax = plt.subplots()
   ax.plot(x, y)
   ax.plot(x,y1)
-  #ax.plot(x,force)
+  ax.plot(x,ac)
 
   ax.set(xlabel='time (s)', ylabel='theta', title='Delta t = ' + str(delta_t) + " s")
   ax.grid()
@@ -56,8 +57,8 @@ def calcula_aceleracion(theta, v, f):
 
 t_max = 5
 dt = 0.0001
-theta_0 = 45
-v_0 = 0
+theta_0 = -30
+v_0 = 1
 a_0 = 0
 
 simular(t_max, dt, theta_0, v_0, a_0)
