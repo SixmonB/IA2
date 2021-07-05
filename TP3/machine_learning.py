@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import collections
 
 # Generador basado en ejemplo del curso CS231 de Stanford: 
 # CS231n Convolutional Neural Networks for Visual Recognition
@@ -47,6 +48,9 @@ def generar_datos_clasificacion(cantidad_ejemplos, cantidad_clases):
 
     return x, t
 
+def generar_datos_clasificacion_alternativo(cantidad_ejemplos, cantidad_clases): # by mere
+    
+    pass
 
 def inicializar_pesos(n_entrada, n_capa_2, n_capa_3):
     randomgen = np.random.default_rng()
@@ -92,17 +96,19 @@ def clasificar(x, pesos):
 # x: n entradas para cada uno de los m ejemplos(nxm)
 # t: salida correcta (target) para cada uno de los m ejemplos (m x 1)
 # pesos: pesos (W y b)
-def train(x, t, pesos, learning_rate, epochs):
+def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA):
     # Cantidad de filas (i.e. cantidad de ejemplos)
-    m = np.size(x, 0) 
+    m = np.size(x, 0)
+    check_validation = list()
     
+
     for i in range(epochs):
         # Ejecucion de la red hacia adelante
         resultados_feed_forward = ejecutar_adelante(x, pesos)
         y = resultados_feed_forward["y"]
         h = resultados_feed_forward["h"]
         z = resultados_feed_forward["z"]
-
+        
         # LOSS
         # a. Exponencial de todos los scores
         exp_scores = np.exp(y)
@@ -121,9 +127,9 @@ def train(x, t, pesos, learning_rate, epochs):
         #    que tomamos del array t ("target")
         loss = (1 / m) * np.sum( -np.log( p[range(m), t] ))
 
+        # accuracy = precision(y, t)
         # Mostramos solo cada 1000 epochs
-        if i %1000 == 0:
-            print("Loss epoch", i, ":", loss)
+  
 
         # Extraemos los pesos a variables locales
         w1 = pesos["w1"]
@@ -160,11 +166,62 @@ def train(x, t, pesos, learning_rate, epochs):
         pesos["w2"] = w2
         pesos["b2"] = b2
 
+       
+        # calculos de 
+        resultados_test = ejecutar_adelante(x_test, pesos)
+        y_test = resultados_test["y"]
+        accuracy_test = precision(y_test, t_test)
+
+        # calculos para validation
+        resultados_validation = ejecutar_adelante(x_validation, pesos)
+        y_validation = resultados_validation["y"]
+        accuracy_validation = precision(y_validation, t_validation)
+        check_validation.append(accuracy_validation)
+
+        if i %1000 == 0:
+            print("Loss epoch", i, ":", loss)
+            # print("Precision epoch", i, ":", accuracy_test)
+            # check_validation.append(loss)
+            # if not validation(TOLERANCIA, check_validation):
+            #     break
+            print('')        
+
+        if i % N_EPOCHS == 0:
+            print("Loss epoch", i, "with validation :", loss)
+            print("Precision Test epoch", i, ":", accuracy_test)
+            # check_validation.apppend(loss)
+            if i > 2:
+                if not validation(TOLERANCIA,check_validation):
+                    break
+            
+
+
+def validation(tol, check_validation):
+    
+    if (check_validation[-1] - check_validation[-2]) < -tol:
+        print("Error Validation")
+        return False
+    return True
+
+
+def precision(np_array, target):
+    
+    # recibe el valro de y 
+    maximos = np_array.argmax(axis = 1)
+    c = np.equal(maximos,target)
+    counter = collections.Counter(c)
+    precision = counter[1]/len(target)*100
+
+    return precision 
+  
 
 def iniciar(numero_clases, numero_ejemplos, graficar_datos):
     # Generamos datos
     x, t = generar_datos_clasificacion(numero_ejemplos, numero_clases)
-
+    x_test, t_test = generar_datos_clasificacion(int(numero_ejemplos*0.1), numero_clases)
+    x_validation, t_validation = generar_datos_clasificacion(int(numero_ejemplos*0.2), numero_clases)
+    N_EPOCHS = 700
+    TOLERANCIA = 3
     # Graficamos los datos si es necesario
     if graficar_datos:
         # Parametro: "c": color (un color distinto para cada clase en t)
@@ -175,11 +232,16 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos):
     NEURONAS_CAPA_OCULTA = 100
     NEURONAS_ENTRADA = 2
     pesos = inicializar_pesos(n_entrada=NEURONAS_ENTRADA, n_capa_2=NEURONAS_CAPA_OCULTA, n_capa_3=numero_clases)
-
+    pesos_test = inicializar_pesos(n_entrada=NEURONAS_ENTRADA, n_capa_2=NEURONAS_CAPA_OCULTA, n_capa_3=numero_clases)
+    pesos_validation = inicializar_pesos(n_entrada=NEURONAS_ENTRADA, n_capa_2=NEURONAS_CAPA_OCULTA, n_capa_3=numero_clases)
     # Entrena
     LEARNING_RATE=1
     EPOCHS=10000
-    train(x, t, pesos, LEARNING_RATE, EPOCHS)
+    train(x, t, pesos, LEARNING_RATE, EPOCHS, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA)
 
+    # test
 
+    # validation
+    # ejecutar_adelante(x_validation, pasos_validation)
+    
 iniciar(numero_clases=3, numero_ejemplos=300, graficar_datos=False)
