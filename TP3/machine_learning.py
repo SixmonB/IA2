@@ -49,16 +49,6 @@ def generar_datos_clasificacion(cantidad_ejemplos, cantidad_clases):
     return x, t
 
 def generar_datos_clasificacion_alternativo(cantidad_ejemplos, cantidad_clases): # by mere
-    FACTOR_ANGULO = 0.79
-    AMPLITUD_ALEATORIEDAD = 0.1
-    x = np.zeros((cantidad_ejemplos, 2))
-    t = np.zeros(cantidad_ejemplos, dtype="uint8")  # 1 columna: la clase correspondiente (t -> "target")
-
-    randomgen = np.random.default_rng()
-    for clase in cantidad_clases:
-
-        centros = radios = np.linspace(0, 1, n) + AMPLITUD_ALEATORIEDAD * randomgen.standard_normal(size=n)
-        radio = 
 
     pass
 
