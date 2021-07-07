@@ -64,12 +64,16 @@ def inicializar_pesos(n_entrada, n_capa_2, n_capa_3):
     return {"w1": w1, "b1": b1, "w2": w2, "b2": b2}
 
 
-def ejecutar_adelante(x, pesos):
+def ejecutar_adelante(x, pesos, f_activacion = 'ReLU' ):
     # Funcion de entrada (a.k.a. "regla de propagacion") para la primera capa oculta
     z = x.dot(pesos["w1"]) + pesos["b1"]
 
+    # Funcion de activacion SIGMOIDE para la capa oculta (h -> "hidden")
+    if f_activacion == 'SIGMOIDE':  h = 1 / ( 1 + np.exp(-z) )
+        
     # Funcion de activacion ReLU para la capa oculta (h -> "hidden")
-    h = np.maximum(0, z)
+    else:  h = np.maximum(0, z)        
+        
 
     # Salida de la red (funcion de activacion lineal). Esto incluye la salida de todas
     # las neuronas y para todos los ejemplos proporcionados
