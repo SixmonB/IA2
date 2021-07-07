@@ -9,66 +9,109 @@ PARA REUTILIZAR EL CODIGO NECESTO DEFINIR
 
 """
 
-
-
-
-
-
 import math
 import sys  
 from pathlib import Path  
-file = Path(__file__). resolve()  
-package_root_directory = file.parents [1]  
-sys.path.append(str(package_root_directory))
-
-#from Ejercicio_4.orders import Orders
-from Ejercicio_2.Layout import *
-from Ejercicio_3.Temple_Simulado import *
-from Ejercicio_3.Punto import *
-from Ejercicio_3.cache import *
-from Ejercicio_4.Genetic_algorithm import *
-from random import randint
-import matplotlib.pyplot as plt
+from random import choice, randint
 
 import numpy as np
-from Ejercicio_3.Punto import Punto  
-from Ejercicio_3.cache import *
-from Ejercicio_2.Layout import *
-
-
 from random import randint
 from math import exp
+
+from .machine_learning import train, inicializar_pesos
 class Estado():
     def __init__(self) -> None:
+        # HIPERPARAMETROS  ---> definen un estado
+        self.q_hiperparametros = 3
 
         self.LEARNING_RATE = int()         # RANGO DE VALORES
         self.NEURONAS_CAPA_OCULTA = int()  # RANGO DE VALORES
-        self.FUNCION_ACTIVACION = str()    # RELU SIGMOIDE
+        self.FUNCION_ACTIVACION = str()    # ReLU SIGMOIDE
 
+        self.ESTADO = list() # lista que 
 
-
+        # Valores para los limites de aleeatoriedad
         self.MAX_learning_rate = int()
         self.MIN_learning_rate = int()
-        pass
 
-    def Calcular_Costo(self):
+        self.MAX_neuronas_capa_oculta = int()
+        self.MIN_neuronas_capa_oculta = int()
+
+        self.funciones_activacion = [ 'ReLU', 'SIGMOIDE' ]
+
+        self.K_FOLDS = int() # Canidad e veces que se hace el calculo de la presicion para un mismo estado
+        self.N_EPOCHS = int()
+        self.q_ejemplos = 300
+        self.q_clases = 3
+        self.tolerancia = 3
+        
+        self.DATOS_ENTRADA = np.array()
+        self.T_ENTRADA =  np.array()
+
+    def Calcular_precision(self):
         '''Calcula el PROMEDIO LA PRESCISION de k veces correr la RED NEURONAL 
         para N_EPOCHS para conjunto de validacion, distintos del de entrenamiento '''
+        
+        prom_precision = 0
+        for k in self.K_FOLDS:
+            pesos = inicializar_pesos(n_entrada = 2,  n_capa_2 = self.NEURONAS_CAPA_OCULTA,  n_capa_3 = self.q_clases )
+            prom_precision += train( self.x_train, self.t_train, pesos, self.LEARNING_RATE, self.N_EPOCHS, self.x_validation, self.t_validation, 1000, self.tolerancia, self.FUNCION_ACTIVACION )
+        
+        
+            pass
+    def Generar_estado(self):
+        'Genera el primer estado aleatorio'
+        hiper = randint(1, self.q_hiperparametros)
+        
+        
+        if hiper == 1: pass
 
+        if hiper == 2: pass
+
+        if hiper == 3: pass
         pass
 
     def Generar_Vecino(self):
-        'Genera un vecino a partr de sus valores actuales'
+        'Genera un vecino a partr de sus valores actuales elegiendo uno de los hiperparametros aleatoriamente'
+        pass
 
+    def leer_datos_entrada(self):
+        'Obtiene del archivo csv los datos de entrada, si no existe, lo crea por unica vez'
+        
+        pass
+
+    def separar_train_validation(self):
+        'Separa la aprte de validacion y la parte de entranamientodcvc'
+        
+        #prepara los indices finales
+        train_idx = list( range(  len( self.DATOS_ENTRADA ) ) )
+        validation_idx = list()
+        
+        size_valid = int( len(train_idx) * 0.25 )
+        
+        for i in range( size_valid):
+            
+            ele = choice(train_idx)
+            validation_idx.append(ele)
+            train_idx.remove(ele)
+            
+            
+        self.x_train = self.DATOS_ENTRADA[train_idx].copy()
+        self.t_train = self.T_ENTRADA[train_idx].copy()
+        
+        self.x_validation = self.DATOS_ENTRADA[validation_idx].copy()
+        self.t_validation = self.T_ENTRADA[validation_idx].copy()
+        
     
 
-class Temple_Simulado():
-    def __init__(self, orden, mapa,t_inicial, mult_energia = 1) -> None:
-        self.costo_total = int()
-        self.almacen = mapa
-        self.punto_inicio = Punto(4,4)
-        self.punto_fin = Punto(4,4)
 
+class Temple_Simulado():
+    def __init__(self, orden, mapa,t_inicial) -> None:
+
+        self.K_FOLDS = int() # cantidad de veces que se realiza 
+        self.costo_total = int()
+        
+        
         self.estado_actual = orden.copy() # lista de puntos de una orden
         self.estado_siguiente = list()
         
@@ -79,14 +122,14 @@ class Temple_Simulado():
         self.it = int() # o float()
         
         self.ENERGIA = float()
-        self.umbral_probabilidad = float()
+        self.umbral_probabilidad =  float()
         
         self.causa = str()
 
         #para graficar
         self.eje_x = list()#np.array([])
         self.evolucion_costo = list()#np.array([])#list()
-        self.mult_energia = mult_energia
+        
 
     def Calcular_Costo(self, estado):
         "Calcula el costo de una orden incluytendo punto de partida "
@@ -139,7 +182,7 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA* self.mult_energia/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA/self.TEMPERATURA) *1000)
         self.azar = randint(1,1000)
         
         if self.azar <= self.umbral_probabilidad: return True

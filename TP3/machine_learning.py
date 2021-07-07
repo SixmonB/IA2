@@ -100,7 +100,7 @@ def clasificar(x, pesos):
 # x: n entradas para cada uno de los m ejemplos(nxm)
 # t: salida correcta (target) para cada uno de los m ejemplos (m x 1)
 # pesos: pesos (W y b)
-def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = 'ReLU'):
+def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = 'ReLU'): # quite  x_test, t_test para usr en temple
     # Cantidad de filas (i.e. cantidad de ejemplos)
     m = np.size(x, 0)
     check_validation = list()
@@ -172,9 +172,9 @@ def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_va
 
        
         # calculos de 
-        resultados_test = ejecutar_adelante(x_test, pesos, f_activ)
-        y_test = resultados_test["y"]
-        accuracy_test = precision(y_test, t_test)
+        # resultados_test = ejecutar_adelante(x_test, pesos, f_activ)
+        # y_test = resultados_test["y"]
+        # accuracy_test = precision(y_test, t_test)
 
         # calculos para validation
         resultados_validation = ejecutar_adelante(x_validation, pesos, f_activ)
@@ -192,7 +192,7 @@ def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_va
 
         if i % N_EPOCHS == 0:
             print("Loss epoch", i, "with validation :", loss)
-            print("Precision Test epoch", i, ":", accuracy_test)
+            # print("Precision Test epoch", i, ":", accuracy_test)   --- > lo quite para pdoer llamar a la funcion desde temple
             # check_validation.apppend(loss)
             if i > 2:
                 if not validation(TOLERANCIA,check_validation):
@@ -241,7 +241,7 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION =
     # Entrena
     LEARNING_RATE=1
     EPOCHS=10000
-    train(x, t, pesos, LEARNING_RATE, EPOCHS, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = FUNCION_ACTIVACION)
+    train(x, t, pesos, LEARNING_RATE, EPOCHS, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = FUNCION_ACTIVACION) # # quite  x_test, t_test para usr en temple
 
     # test
 
