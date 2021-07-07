@@ -100,7 +100,7 @@ def clasificar(x, pesos):
 # x: n entradas para cada uno de los m ejemplos(nxm)
 # t: salida correcta (target) para cada uno de los m ejemplos (m x 1)
 # pesos: pesos (W y b)
-def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA):
+def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = 'ReLU'):
     # Cantidad de filas (i.e. cantidad de ejemplos)
     m = np.size(x, 0)
     check_validation = list()
@@ -108,7 +108,7 @@ def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_va
 
     for i in range(epochs):
         # Ejecucion de la red hacia adelante
-        resultados_feed_forward = ejecutar_adelante(x, pesos)
+        resultados_feed_forward = ejecutar_adelante(x, pesos, f_activ)
         y = resultados_feed_forward["y"]
         h = resultados_feed_forward["h"]
         z = resultados_feed_forward["z"]
@@ -172,12 +172,12 @@ def train(x, t, pesos, learning_rate, epochs, x_test, t_test, x_validation, t_va
 
        
         # calculos de 
-        resultados_test = ejecutar_adelante(x_test, pesos)
+        resultados_test = ejecutar_adelante(x_test, pesos, f_activ)
         y_test = resultados_test["y"]
         accuracy_test = precision(y_test, t_test)
 
         # calculos para validation
-        resultados_validation = ejecutar_adelante(x_validation, pesos)
+        resultados_validation = ejecutar_adelante(x_validation, pesos, f_activ)
         y_validation = resultados_validation["y"]
         accuracy_validation = precision(y_validation, t_validation)
         check_validation.append(accuracy_validation)
@@ -219,7 +219,7 @@ def precision(np_array, target):
     return precision
   
 
-def iniciar(numero_clases, numero_ejemplos, graficar_datos):
+def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION = 'ReLU'):
     # Generamos datos
     x, t = generar_datos_clasificacion(numero_ejemplos, numero_clases)
     x_test, t_test = generar_datos_clasificacion(int(numero_ejemplos*0.1), numero_clases)
@@ -241,7 +241,7 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos):
     # Entrena
     LEARNING_RATE=1
     EPOCHS=10000
-    train(x, t, pesos, LEARNING_RATE, EPOCHS, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA)
+    train(x, t, pesos, LEARNING_RATE, EPOCHS, x_test, t_test, x_validation, t_validation, N_EPOCHS, TOLERANCIA, f_activ = FUNCION_ACTIVACION)
 
     # test
 
