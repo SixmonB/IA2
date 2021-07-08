@@ -247,5 +247,5 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION =
 
     # validation
     # ejecutar_adelante(x_validation, pasos_validation)
-    
-iniciar(numero_clases=3, numero_ejemplos=300, graficar_datos=False)
+if __name__ == '__main__':
+    iniciar(numero_clases=3, numero_ejemplos=300, graficar_datos=False)
