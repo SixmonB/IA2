@@ -48,9 +48,35 @@ def generar_datos_clasificacion(cantidad_ejemplos, cantidad_clases):
 
     return x, t
 
-def generar_datos_clasificacion_alternativo(cantidad_ejemplos, cantidad_clases): # by mere
-
-    pass
+def generar_datos_clasificacion_alternativo(cantidad_ejemplos, cantidad_clases,graficar): # by mere
+    FACTOR_ANGULO = 0.9
+    AMPLITUD_ALEATORIEDAD = 0.2
+    n = int(cantidad_ejemplos / cantidad_clases) #Cantidad de ejem
+    x = np.zeros((cantidad_ejemplos, 2))
+    t = np.zeros(cantidad_ejemplos, dtype="uint8")  # 1 columna: la clase correspondiente (t -> "target")
+    randomgen = np.random.default_rng()
+    centros_x = np.random.uniform(0,1,cantidad_clases) +AMPLITUD_ALEATORIEDAD * randomgen.standard_normal(size=cantidad_clases)
+    centros_y = np.random.uniform(0,1,cantidad_clases) +AMPLITUD_ALEATORIEDAD * randomgen.standard_normal(size=cantidad_clases)
+    radios = np.random.uniform(0.5,1,cantidad_clases)+FACTOR_ANGULO * abs(randomgen.standard_normal(size=cantidad_clases))
+    radios = abs(radios)
+    print("centros x:",centros_x)
+    print("centros y:",centros_y)
+    print("Radios:",radios)
+    for clase in range(cantidad_clases):
+        x1 = np.array([])
+        x2 = np.array([])
+        radio = radios[clase]
+        centro_x = abs(centros_x[clase])
+        centro_y = abs(centros_y[clase])
+        for i in range(100):
+            x1 = np.append(x1,[centro_x + uniform(0,radio)])
+            x2 = np.append(x2,[centro_y + uniform(0,radio)])
+        indices = range(clase * n, (clase + 1) * n)
+        x[indices]=np.c_[x1,x2]
+        t[indices] = clase
+    if graficar:
+        plt.scatter(x[:, 0], x[:, 1], c=t)
+        plt.show()
 
 def inicializar_pesos(n_entrada, n_capa_2, n_capa_3):
     randomgen = np.random.default_rng()
@@ -113,7 +139,10 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
         h = resultados_feed_forward["h"]
         z = resultados_feed_forward["z"]
         
-        # LOSS
+        # LOSS ---------------------------
+
+        # Clasificacion: Softmax
+
         # a. Exponencial de todos los scores
         exp_scores = np.exp(y)
 
@@ -130,7 +159,13 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
         # d. Calculo de la funcion de perdida global. Solo se usa la probabilidad de la clase correcta, 
         #    que tomamos del array t ("target")
         loss = (1 / m) * np.sum( -np.log( p[range(m), t] ))
+        
+        # Regresion: Mean Squared Error (MSE)
 
+        # a. Cuadrado del error ( Li(W) = (ti - yi)^2 )
+        square_error = np.square( (t-y), None)
+        loss_mse = np.sum(square_error, axis=1)/m
+        
         # accuracy = precision(y, t)
         # Mostramos solo cada 1000 epochs
   
@@ -190,13 +225,20 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
             #     break
             print('')        
 
-        if i % N_EPOCHS == 0:
-            print("Loss epoch", i, "with validation :", loss)
-            # print("Precision Test epoch", i, ":", accuracy_test)   --- > lo quite para pdoer llamar a la funcion desde temple
-            # check_validation.apppend(loss)
-            if i > 2:
-                if not validation(TOLERANCIA,check_validation):
-                    break
+        # if i % N_EPOCHS == 0:
+        #     print("Loss epoch", i, "with validation :", loss)
+        #     # print("Precision Test epoch", i, ":", accuracy_test)   --- > lo quite para pdoer llamar a la funcion desde temple
+        #     # check_validation.apppend(loss)
+        #     if i > 2:
+        #         if not validation(TOLERANCIA,check_validation):
+        #             break
+
+    
+    resultados_validation = ejecutar_adelante(x_validation, pesos, f_activ)
+    y_validation = resultados_validation["y"]
+    accuracy_validation = precision(y_validation, t_validation)
+    check_validation.append(accuracy_validation)
+    return accuracy_validation
             
 
 
@@ -222,6 +264,7 @@ def precision(np_array, target):
 def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION = 'ReLU'):
     # Generamos datos
     x, t = generar_datos_clasificacion(numero_ejemplos, numero_clases)
+    print(t.shape)
     x_test, t_test = generar_datos_clasificacion(int(numero_ejemplos*0.1), numero_clases)
     x_validation, t_validation = generar_datos_clasificacion(int(numero_ejemplos*0.2), numero_clases)
     N_EPOCHS = 700

@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from random import randint
 from math import exp
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from machine_learning import train, inicializar_pesos, generar_datos_clasificacion
 class Estado():
     def __init__(self) -> None:
@@ -34,8 +34,8 @@ class Estado():
 
         # parametros de entrada de train
     
-        self.K_FOLDS = int() # Canidad e veces que se hace el calculo de la presicion para un mismo estado
-        self.N_EPOCHS = int()
+        self.K_FOLDS = 5 # Canidad e veces que se hace el calculo de la presicion para un mismo estado
+        self.N_EPOCHS = 1000
         self.q_ejemplos = 300
         self.q_clases = 3
         self.tolerancia = 3
@@ -43,16 +43,38 @@ class Estado():
         self.DATOS_ENTRADA = np.array([])
         self.T_ENTRADA =  np.array([])
 
+
+    
+    def leer_datos_entrada(self):
+        'Obtiene del archivo csv los datos de entrada, si no existe, lo crea por unica vez'
+        
+        if  os.path.isfile('datos_entrada.csv'):
+            df = pd.read_csv('datos_entrada.csv', sep= ';')
+            self.DATOS_ENTRADA = df.loc[:, ["x", "y"]].values
+            self.T_ENTRADA = df.loc[:, ["t"]].values.reshape((300, ))
+            print(self.T_ENTRADA.shape)
+            print(self.T_ENTRADA)
+            
+
+        else:
+            Generar_Ejemplos_Temple()
+            self.leer_datos_entrada()
+
+
     def Calcular_precision(self):
         '''Calcula el PROMEDIO LA PRESCISION de k veces correr la RED NEURONAL 
         para N_EPOCHS para conjunto de validacion, distintos del de entrenamiento '''
         
-        prom_precision = 0
+        sum_precision = 0
         
-        for k in self.K_FOLDS:
+        for k in range(self.K_FOLDS):
+            #variar 
+            self.separar_train_validation()
             pesos = inicializar_pesos(n_entrada = 2,  n_capa_2 = self.NEURONAS_CAPA_OCULTA,  n_capa_3 = self.q_clases )
-            prom_precision += train( self.x_train, self.t_train, pesos, self.LEARNING_RATE, self.N_EPOCHS, self.x_validation, self.t_validation, 1000, self.tolerancia, self.FUNCION_ACTIVACION )
+            sum_precision += train( self.x_train, self.t_train, pesos, self.LEARNING_RATE, self.N_EPOCHS, self.x_validation, self.t_validation, 1000, self.tolerancia, self.FUNCION_ACTIVACION )
         
+        prom_precision = sum_precision / self.K_FOLDS
+        print(prom_precision)
         return prom_precision
 
 
@@ -60,7 +82,7 @@ class Estado():
         'Genera el primer estado aleatorio'
         
         self.LEARNING_RATE = uniform(self.MIN_learning_rate, self.MIN_learning_rate)
-        self.NEURONAS_CAPA_OCULTA = uniform( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
+        self.NEURONAS_CAPA_OCULTA = randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
         self.FUNCION_ACTIVACION = choice( self.funciones_activacion )
         
      
@@ -92,7 +114,7 @@ class Estado():
             
         
         elif hiper == 'neuronas_capa_oculta': 
-            vecino.NEURONAS_CAPA_OCULTA =  uniform( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
+            vecino.NEURONAS_CAPA_OCULTA =  randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
 
         elif hiper == 'funcion_activacion': 
             act = self.funciones_activacion.copy()
@@ -102,17 +124,6 @@ class Estado():
         return vecino
         
 
-    def leer_datos_entrada(self):
-        'Obtiene del archivo csv los datos de entrada, si no existe, lo crea por unica vez'
-        
-        if  os.path.isfile('datos_entrada.csv'):
-            df = pd.read_csv('datos_entrada.csv', sep= ';')
-            self.DATOS_ENTRADA = df.loc[:, ["x", "y"]].values
-            self.T_ENTRADA = df.loc[:, ["t"]].values
-
-        else:
-            Generar_Ejemplos_Temple()
-            self.leer_datos_entrada()
         
         
 
@@ -170,12 +181,10 @@ class Temple_Simulado():
         "Calcula el costo de una orden incluytendo punto de partida "
         global memoria
         
-        costo  =  estado.Calcular_precision
+        costo  =  estado.Calcular_precision()
         
         return costo
     
-
-
 
     def Funcion_Decrecimiento(self , modo = 2):
         "Almacena las distintas formas de bajar la TEMPERATURA en funcion de it"
@@ -215,6 +224,7 @@ class Temple_Simulado():
 
         self.costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
         self.ENERGIA = (self.costo_siguiente - self.costo_actual)
+        print(self.ENERGIA)
 
     
     def Generar_Vecino(self):
@@ -242,9 +252,9 @@ class Temple_Simulado():
             # print(self.TEMPERATURA)
             
             self.Funcion_Decrecimiento()
-            
+            print(self.TEMPERATURA)
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA <= 0   :
+            if self.TEMPERATURA <= np.exp(-7) :
                 self.causa = f'Tmperatura 0'
                 break
            
@@ -375,9 +385,9 @@ if __name__ == '__main__':
             
         n_iteracion = normalizar ( np.array(temple.eje_x) )
             
-
+        print(temple.evolucion_costo)
         calidad = normalizar( np.array(temple.evolucion_costo),2 )
-        
+        print(calidad)
         # graficos_evolucion.append((n_iteracion,calidad))
         graf  = plt.plot(n_iteracion,calidad)
             
