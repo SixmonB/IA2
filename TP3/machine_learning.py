@@ -89,13 +89,17 @@ def inicializar_pesos(n_entrada, n_capa_2, n_capa_3):
 
     return {"w1": w1, "b1": b1, "w2": w2, "b2": b2}
 
+def sigmoide(x):
+    return 1 / ( 1 + np.exp(-x) )
+
+
 
 def ejecutar_adelante(x, pesos, f_activacion = 'ReLU' ):
     # Funcion de entrada (a.k.a. "regla de propagacion") para la primera capa oculta
     z = x.dot(pesos["w1"]) + pesos["b1"]
 
     # Funcion de activacion SIGMOIDE para la capa oculta (h -> "hidden")
-    if f_activacion == 'SIGMOIDE':  h = 1 / ( 1 + np.exp(-z) )
+    if f_activacion == 'SIGMOIDE':  h = sigmoide(z)    #1 / ( 1 + np.exp(-z) )
         
     # Funcion de activacion ReLU para la capa oculta (h -> "hidden")
     else:  h = np.maximum(0, z)        
@@ -162,9 +166,9 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
         
         # Regresion: Mean Squared Error (MSE)
 
-        # a. Cuadrado del error ( Li(W) = (ti - yi)^2 )
-        square_error = np.square( (t-y), None)
-        loss_mse = np.sum(square_error, axis=1)/m
+        # # a. Cuadrado del error ( Li(W) = (ti - yi)^2 )
+        # square_error = np.square( (t-y), None)
+        # loss_mse = np.sum(square_error, axis=1)/m
         
         # accuracy = precision(y, t)
         # Mostramos solo cada 1000 epochs
@@ -185,12 +189,23 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
         dL_db2 = np.sum(dL_dy, axis=0, keepdims=True)   # Ajuste para b2
 
         dL_dh = dL_dy.dot(w2.T)
+
+        if f_activ == 'SIGMOIDE':
+            dh_dz  = sigmoide(z) * (1- sigmoide(z)) 
+            dL_dz = dL_dh * dh_dz
+        else:
+            dL_dz = dL_dh       # El calculo dL/dz = dL/dh * dh/dz. La funcion "h" es la funcion de activacion de la capa oculta,
+            dL_dz[z <= 0] = 0   # para la que usamos ReLU. La derivada de la funcion ReLU: 1(z > 0) (0 en otro caso)
         
-        dL_dz = dL_dh       # El calculo dL/dz = dL/dh * dh/dz. La funcion "h" es la funcion de activacion de la capa oculta,
-        dL_dz[z <= 0] = 0   # para la que usamos ReLU. La derivada de la funcion ReLU: 1(z > 0) (0 en otro caso)
+     
+
+
 
         dL_dw1 = x.T.dot(dL_dz)                         # Ajuste para w1
         dL_db1 = np.sum(dL_dz, axis=0, keepdims=True)   # Ajuste para b1
+
+
+
 
         # Aplicamos el ajuste a los pesos
         w1 += -learning_rate * dL_dw1
@@ -261,7 +276,7 @@ def precision(np_array, target):
     return precision
   
 
-def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION = 'ReLU'):
+def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION = 'SIGMOIDE'):
     # Generamos datos
     x, t = generar_datos_clasificacion(numero_ejemplos, numero_clases)
     print(t.shape)
