@@ -232,13 +232,13 @@ def train(x, t, pesos, learning_rate, epochs, x_validation, t_validation, N_EPOC
         accuracy_validation = precision(y_validation, t_validation)
         check_validation.append(accuracy_validation)
 
-        if i %1000 == 0:
-            print("Loss epoch", i, ":", loss)
+        # if i %1000 == 0:
+            # print("Loss epoch", i, ":", loss)
             # print("Precision epoch", i, ":", accuracy_test)
             # check_validation.append(loss)
             # if not validation(TOLERANCIA, check_validation):
             #     break
-            print('')        
+            # print('')        
 
         # if i % N_EPOCHS == 0:
         #     print("Loss epoch", i, "with validation :", loss)

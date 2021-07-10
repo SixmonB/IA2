@@ -12,20 +12,21 @@ class Estado():
 
         # HIPERPARAMETROS  ---> definen un estado
         
-        self.hiperparametros = [ 'learning_rate', 'neuronas_capa_oculta', 'funcion_activacion'  ]
+        self.hiperparametros = [ 'learning_rate', 'neuronas_capa_oculta'  ] # , 'funcion_activacion' --- saque la fncion de activacion por que siempre dio relu
 
         self.LEARNING_RATE = int()         # RANGO DE VALORES
         self.NEURONAS_CAPA_OCULTA = int()  # RANGO DE VALORES
-        self.FUNCION_ACTIVACION = str()    # ReLU SIGMOIDE
+        self.FUNCION_ACTIVACION = 'ReLU' #str()    # ReLU SIGMOIDE
 
         
 
         # Valores para los limites de aleeatoriedad
-        self.MIN_learning_rate = 1
-        self.MAX_learning_rate = 20 
+        self.MIN_learning_rate = 0.5
+        self.MAX_learning_rate = 1.5
+        self.posibles_learning_rates =  list( np.arange(self.MIN_learning_rate, self.MAX_learning_rate, 0.05))
         
         self.MIN_neuronas_capa_oculta = 50
-        self.MAX_neuronas_capa_oculta = 200
+        self.MAX_neuronas_capa_oculta = 150
         
 
         self.funciones_activacion = [ 'ReLU', 'SIGMOIDE' ]
@@ -52,8 +53,8 @@ class Estado():
             df = pd.read_csv('datos_entrada.csv', sep= ';')
             self.DATOS_ENTRADA = df.loc[:, ["x", "y"]].values
             self.T_ENTRADA = df.loc[:, ["t"]].values.reshape((300, ))
-            print(self.T_ENTRADA.shape)
-            print(self.T_ENTRADA)
+            # print(self.T_ENTRADA.shape)
+            # print(self.T_ENTRADA)
             
 
         else:
@@ -74,16 +75,16 @@ class Estado():
             sum_precision += train( self.x_train, self.t_train, pesos, self.LEARNING_RATE, self.N_EPOCHS, self.x_validation, self.t_validation, 1000, self.tolerancia, self.FUNCION_ACTIVACION )
         
         prom_precision = sum_precision / self.K_FOLDS
-        print(prom_precision)
+        
         return prom_precision
 
 
     def Generar_estado_primogenito(self):
         'Genera el primer estado aleatorio'
         
-        self.LEARNING_RATE = uniform(self.MIN_learning_rate, self.MIN_learning_rate)
+        self.LEARNING_RATE =   choice( self.posibles_learning_rates)                        #uniform(self.MIN_learning_rate, self.MIN_learning_rate)
         self.NEURONAS_CAPA_OCULTA = randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
-        self.FUNCION_ACTIVACION = choice( self.funciones_activacion )
+        # self.FUNCION_ACTIVACION = choice( self.funciones_activacion )
         
      
     def Get_hiperparametros(self):
@@ -110,7 +111,10 @@ class Estado():
         hiper = choice(self.hiperparametros)
         
         if  hiper == 'learning_rate': 
-            vecino.LEARNING_RATE =  uniform( self.MIN_learning_rate, self.MAX_learning_rate)
+            # vecino.LEARNING_RATE =  uniform( self.MIN_learning_rate, self.MAX_learning_rate)
+            act = self.posibles_learning_rates.copy()
+            act.remove(self.LEARNING_RATE)
+            vecino.LEARNING_RATE = choice( act )
             
         
         elif hiper == 'neuronas_capa_oculta': 
@@ -122,6 +126,11 @@ class Estado():
             vecino.FUNCION_ACTIVACION = choice( act )
 
         return vecino
+        
+    def __str__(self) -> str:
+        res  =  f'LEARNING RATE: {self.LEARNING_RATE}\nNEURONAS OCULTAS: {self.NEURONAS_CAPA_OCULTA}\nFUNCION ACTIVACION: {self.FUNCION_ACTIVACION}'
+        return res
+        
         
 
         
@@ -209,9 +218,9 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*10/self.TEMPERATURA) *1000)
         self.azar = randint(1,1000)
-        
+        # print('PROBABILIDAD DE ACEPTAR: ' , self.umbral_probabilidad/1000)
         if self.azar <= self.umbral_probabilidad: return True
         else: return False
 
@@ -220,11 +229,14 @@ class Temple_Simulado():
         '''La energia es negativa cuando el siguiente es peor que el actual.
             En nuestro caso e costo es la precision, y es mejor que el siguiente sea mas alta
          '''
-        self.costo_actual = self.Calcular_Costo(self.estado_actual)
+        if self.it == 0:
+            self.costo_actual = self.Calcular_Costo(self.estado_actual)
 
         self.costo_siguiente = self.Calcular_Costo(self.estado_siguiente)
+        # print('COSTO ACTUAL: ', self.costo_actual)
+        # print('COSTO SIGUIENTE: ', self.costo_siguiente)
         self.ENERGIA = (self.costo_siguiente - self.costo_actual)
-        print(self.ENERGIA)
+        # print('ENERGIA: ', self.ENERGIA)
 
     
     def Generar_Vecino(self):
@@ -252,9 +264,9 @@ class Temple_Simulado():
             # print(self.TEMPERATURA)
             
             self.Funcion_Decrecimiento()
-            print(self.TEMPERATURA)
+            
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA <= np.exp(-7) :
+            if self.TEMPERATURA <= np.exp(-9) :
                 self.causa = f'Tmperatura 0'
                 break
            
@@ -312,7 +324,7 @@ def normalizar(array, modo = 1):
     # Normalizacion para la calidad
     if modo == 2:
         array = (array - abs(array).min())/(abs(array).max()  - abs(array).min())
-        array = 1 - array
+        # array = 1 - array
 
 
     return array
@@ -350,11 +362,11 @@ if __name__ == '__main__':
 
 
 
-    temperatura_inicial = 500
+    temperatura_inicial = 200
     # # memoria = Cache()
     graficos_evolucion = list()
 
-    q_experiment = 10
+    q_experiment = 30
 
 
 
@@ -363,22 +375,6 @@ if __name__ == '__main__':
         estado_inicial = Estado()
         estado_inicial.Generar_estado_primogenito()
         estado_inicial.leer_datos_entrada()
-
-        
-        print('\n\n')
-        print ('='.center(40, "=")) 
-        print(f'EXPERIMENTO: {ex} ')
-        # print(f'Cantidad de ordenes: {q_ordenes}')
-        # print(f'Pedidos por orden: {q_picks}')
-        print(f'Pedidos por orden: {temperatura_inicial}')
-        print ('='.center(40, "=")) 
-        print('\n\n')
-
-            
-
-
-            
-            
                     
         temple = Temple_Simulado(estado_inicial,temperatura_inicial)
         temple.Iniciar_Busqueda_Local()
@@ -387,15 +383,25 @@ if __name__ == '__main__':
             
         print(temple.evolucion_costo)
         calidad = normalizar( np.array(temple.evolucion_costo),2 )
-        print(calidad)
+        # print(calidad)
         # graficos_evolucion.append((n_iteracion,calidad))
         graf  = plt.plot(n_iteracion,calidad)
+        print('\n\n')
+        print ('='.center(40, "=")) 
+        print(f'EXPERIMENTO: {ex} ')
+        # print(f'Cantidad de ordenes: {q_ordenes}')
+        # print(f'Pedidos por orden: {q_picks}')
+        print(f'Pedidos por orden: {temperatura_inicial}')
+        
             
-            
-        print(temple.causa)
+        print('CAUSA DE SALIDA: ',temple.causa)
+        print(f'MEJOR ESTADO: ', temple.estado_actual)
+        print(f'CALIDAD DE ESTADO: ', temple.costo_actual)
+        print ('='.center(40, "=")) 
+        print('\n\n')
       
         # memoria.Guardar_Memoria()
-        plt.show()
+    plt.show()
 
 
 
