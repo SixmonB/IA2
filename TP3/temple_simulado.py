@@ -21,12 +21,13 @@ class Estado():
         
 
         # Valores para los limites de aleeatoriedad
-        self.MIN_learning_rate = 0.5
-        self.MAX_learning_rate = 1.5
+        self.MIN_learning_rate = 0.7
+        self.MAX_learning_rate = 1.2
         self.posibles_learning_rates =  list( np.arange(self.MIN_learning_rate, self.MAX_learning_rate, 0.05))
         
         self.MIN_neuronas_capa_oculta = 50
-        self.MAX_neuronas_capa_oculta = 150
+        self.MAX_neuronas_capa_oculta = 120
+        self.posibles_neuronas_ocultas =  list( np.arange(self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta, 5))
         
 
         self.funciones_activacion = [ 'ReLU', 'SIGMOIDE' ]
@@ -36,7 +37,7 @@ class Estado():
         # parametros de entrada de train
     
         self.K_FOLDS = 5 # Canidad e veces que se hace el calculo de la presicion para un mismo estado
-        self.N_EPOCHS = 1000
+        self.N_EPOCHS = 2000
         self.q_ejemplos = 300
         self.q_clases = 3
         self.tolerancia = 3
@@ -83,7 +84,7 @@ class Estado():
         'Genera el primer estado aleatorio'
         
         self.LEARNING_RATE =   choice( self.posibles_learning_rates)                        #uniform(self.MIN_learning_rate, self.MIN_learning_rate)
-        self.NEURONAS_CAPA_OCULTA = randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
+        self.NEURONAS_CAPA_OCULTA = choice( self.posibles_neuronas_ocultas)                #randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
         # self.FUNCION_ACTIVACION = choice( self.funciones_activacion )
         
      
@@ -118,7 +119,10 @@ class Estado():
             
         
         elif hiper == 'neuronas_capa_oculta': 
-            vecino.NEURONAS_CAPA_OCULTA =  randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
+            # vecino.NEURONAS_CAPA_OCULTA =  randint( self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta)
+            act = self.posibles_neuronas_ocultas.copy()
+            act.remove(self.NEURONAS_CAPA_OCULTA)
+            vecino.NEURONAS_CAPA_OCULTA = choice( act )
 
         elif hiper == 'funcion_activacion': 
             act = self.funciones_activacion.copy()
@@ -218,7 +222,7 @@ class Temple_Simulado():
 
         #n°e elevado a energiasobre Temperatura
 
-        self.umbral_probabilidad = int(exp(self.ENERGIA*10/self.TEMPERATURA) *1000)
+        self.umbral_probabilidad = int(exp(self.ENERGIA*1/self.TEMPERATURA) *1000)
         self.azar = randint(1,1000)
         # print('PROBABILIDAD DE ACEPTAR: ' , self.umbral_probabilidad/1000)
         if self.azar <= self.umbral_probabilidad: return True
@@ -266,8 +270,8 @@ class Temple_Simulado():
             self.Funcion_Decrecimiento()
             
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA <= np.exp(-9) :
-                self.causa = f'Tmperatura 0'
+            if self.TEMPERATURA <= np.exp(-40) :
+                self.causa = f'Temperatura 0'
                 break
            
             self.Generar_Vecino()
