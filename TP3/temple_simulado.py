@@ -22,10 +22,10 @@ class Estado():
 
         # Valores para los limites de aleeatoriedad
         self.MIN_learning_rate = 0.7
-        self.MAX_learning_rate = 1.2
+        self.MAX_learning_rate = 1.1
         self.posibles_learning_rates =  list( np.arange(self.MIN_learning_rate, self.MAX_learning_rate, 0.05))
         
-        self.MIN_neuronas_capa_oculta = 50
+        self.MIN_neuronas_capa_oculta = 60
         self.MAX_neuronas_capa_oculta = 120
         self.posibles_neuronas_ocultas =  list( np.arange(self.MIN_neuronas_capa_oculta, self.MAX_neuronas_capa_oculta, 5))
         
@@ -270,7 +270,7 @@ class Temple_Simulado():
             self.Funcion_Decrecimiento()
             
             # print(self.TEMPERATURA)
-            if self.TEMPERATURA <= np.exp(-40) :
+            if self.TEMPERATURA <= 0 :
                 self.causa = f'Temperatura 0'
                 break
            
@@ -385,7 +385,7 @@ if __name__ == '__main__':
             
         n_iteracion = normalizar ( np.array(temple.eje_x) )
             
-        print(temple.evolucion_costo)
+        print(len(temple.evolucion_costo))
         calidad = normalizar( np.array(temple.evolucion_costo),2 )
         # print(calidad)
         # graficos_evolucion.append((n_iteracion,calidad))
