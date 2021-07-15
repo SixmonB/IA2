@@ -359,7 +359,7 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION =
         #     ax.plot3D(xline, yline, zline, 'gray')
 
     # Inicializa pesos de la red
-    NEURONAS_CAPA_OCULTA = 50
+    NEURONAS_CAPA_OCULTA = 70
     NEURONAS_ENTRADA = 2
     
     if MODO == 'REGRESION':
@@ -369,7 +369,7 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION =
         pesos = inicializar_pesos(n_entrada=NEURONAS_ENTRADA, n_capa_2=NEURONAS_CAPA_OCULTA, n_capa_3=numero_clases)
     
     # Entrena
-    LEARNING_RATE= 0.1
+    LEARNING_RATE= 0.85
     EPOCHS=10000
     train(x, t, pesos, LEARNING_RATE, EPOCHS, x_validation, t_validation, N_EPOCHS, TOLERANCIA, MODO,f_activ = FUNCION_ACTIVACION) # # quite  x_test, t_test para usr en temple
 
@@ -378,4 +378,4 @@ def iniciar(numero_clases, numero_ejemplos, graficar_datos, FUNCION_ACTIVACION =
     # validation
     # ejecutar_adelante(x_validation, pasos_validation)
 if __name__ == '__main__':
-    iniciar(numero_clases=1, numero_ejemplos=300, graficar_datos=False,FUNCION_ACTIVACION= 'ReLU', MODO='REGRESION')
+    iniciar(numero_clases=3, numero_ejemplos=300, graficar_datos=False,FUNCION_ACTIVACION= 'ReLU', MODO='CLASIFICACION')
