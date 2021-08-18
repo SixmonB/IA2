@@ -21,7 +21,7 @@ def generar_datos_clasificacion(cantidad_ejemplos, cantidad_clases, modo):
     # Salida deseada ("target"): 1 columna que contendra la clase correspondiente (codificada como un entero)
     # t = np.zeros(cantidad_ejemplos, dtype="uint8")  # 1 columna: la clase correspondiente (t -> "target")
 
-    randomgen = np.random.default_rng()
+    randomgen = np.random.default_rng() 
 
     # Por cada clase (que va de 0 a cantidad_clases)...
     for clase in range(cantidad_clases):
